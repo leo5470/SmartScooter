@@ -13,7 +13,7 @@ public class SmartScooterApplication {
 		SpringApplication.run(SmartScooterApplication.class, args);
 	}
 
-	@GetMapping("/")
+	@GetMapping("/api")
 	public String home() {
 		String description = new String(getClass().getPackageName());
 		return description;

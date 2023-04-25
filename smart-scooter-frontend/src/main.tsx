@@ -9,6 +9,8 @@ import Home from "./routes/home";
 import Login from "./routes/login";
 import ErrorPage from "./error-page";
 
+import User from "./routes/user"
+
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
     children: [
       { path: "login", element: <Login></Login> }
     ]
+  },
+  {
+    path: "/user",
+    element: <User></User>
   }
 ]);
 
