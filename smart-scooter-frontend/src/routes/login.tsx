@@ -1,14 +1,11 @@
-import "./root.css"
-export default function Root() {
+import "./login.css"
+export default function Login() {
     return (
         <>
             <section>
                 <article className="grid">
                     <div>
-                        <hgroup>
-                            <h1>Sign in</h1>
-                            <h2>Effortlessly Intelligent</h2>
-                        </hgroup>
+                        <h1>Sign in</h1>
                         <form>
                             <input
                                 type="text"
