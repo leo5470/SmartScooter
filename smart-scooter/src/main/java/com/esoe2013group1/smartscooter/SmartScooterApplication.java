@@ -18,5 +18,4 @@ public class SmartScooterApplication {
 		String description = new String(getClass().getPackageName());
 		return description;
 	}
-
 }
