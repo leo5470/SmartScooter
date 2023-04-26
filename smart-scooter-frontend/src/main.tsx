@@ -5,6 +5,8 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import "./main.css";
+
 import Home from "./routes/home";
 import Login from "./routes/login";
 import ErrorPage from "./error-page";

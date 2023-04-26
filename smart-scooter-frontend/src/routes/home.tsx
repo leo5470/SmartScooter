@@ -1,6 +1,5 @@
 import AnonymousNav from "../lib/anonymous-nav";
 import { useOutlet } from "react-router-dom";
-import "./home.css"
 export default function Home() {
     const outlet = useOutlet();
     return (

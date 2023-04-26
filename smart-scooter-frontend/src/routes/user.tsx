@@ -1,32 +1,51 @@
 import * as THREE from 'three'
 import { useLayoutEffect, useRef, useState } from 'react'
 import { Canvas, applyProps, useFrame } from '@react-three/fiber'
-import { PerformanceMonitor, AccumulativeShadows, RandomizedLight, Environment, Lightformer, Float, useGLTF } from '@react-three/drei'
+import { PerformanceMonitor, AccumulativeShadows, RandomizedLight, Environment, Lightformer, Float, useGLTF, Text3D } from '@react-three/drei'
 import { LayerMaterial, Color, Depth } from 'lamina'
+import { useOutlet } from "react-router-dom";
+import UserNav from "../lib/user-nav"
 
 export default function User() {
+    const outlet = useOutlet();
+    return (
+        <>
+            <UserNav></UserNav>
+            <main className="container">
+                {outlet || <Showcase></Showcase>}
+            </main>
+        </>
+    )
+}
+
+function Showcase() {
     const [degraded, degrade] = useState(false)
     return (
         <>
-            <main className="container">
-                <section style={{ "height": "600px" }}>
+
+            <section>
+                <div style={{ "aspectRatio": 2.4 }}>
                     <Canvas shadows camera={{ position: [5, 0, 15], fov: 30 }}>
                         <spotLight position={[0, 15, 0]} angle={0.3} penumbra={1} castShadow intensity={2} shadow-bias={-0.0001} />
                         <ambientLight intensity={0.5} />
-                        <Porsche scale={1.6} position={[-0.5, -0.18, 0]} rotation={[0, Math.PI / 5, 0]} />
+                        <Text3D position={[-4.8, 0, 2]} font="./font/tech_font.json">
+                            Start Your Journey
+                        </Text3D>
+                        <Porsche scale={3.4} position={[-0.5, -2, 0]} rotation={[0, Math.PI / 5, 0]} />
                         <AccumulativeShadows position={[0, -1.16, 0]} frames={100} alphaTest={0.9} scale={10}>
                             <RandomizedLight amount={8} radius={10} ambient={0.5} position={[1, 5, -1]} />
                         </AccumulativeShadows>
                         {/** PerfMon will detect performance issues */}
                         <PerformanceMonitor onDecline={() => degrade(true)} />
                         {/* Renders contents "live" into a HDRI environment (scene.environment). */}
-                        <Environment frames={degraded ? 1 : Infinity} resolution={256} background blur={1}>
+                        <Environment frames={degraded ? 1 : Infinity} preset="forest" resolution={256} background blur={1}>
                             <Lightformers />
                         </Environment>
+
                         <CameraRig />
                     </Canvas>
-                </section>
-            </main>
+                </div>
+            </section >
         </>
     )
 }
@@ -41,14 +60,8 @@ Title: (FREE) Porsche 911 Carrera 4S
 //"125cc Scooter - Motorcycle" (https://skfb.ly/osvZw) by Diego G. is licensed under Creative Commons Attribution (http://creativecommons.org/licenses/by/4.0/).
 
 function Porsche(props) {
-    const { scene, nodes, materials } = useGLTF('/3d/911-transformed.glb')
-    useLayoutEffect(() => {
-        Object.values(nodes).forEach((node) => node.isMesh && (node.receiveShadow = node.castShadow = true))
-        applyProps(materials.rubber, { color: '#222', roughness: 0.6, roughnessMap: null, normalScale: [4, 4] })
-        applyProps(materials.window, { color: 'black', roughness: 0, clearcoat: 0.1 })
-        applyProps(materials.coat, { envMapIntensity: 4, roughness: 0.5, metalness: 1 })
-        applyProps(materials.paint, { envMapIntensity: 2, roughness: 0.45, metalness: 0.8, color: '#555' })
-    }, [nodes, materials])
+    const { scene, nodes, materials } = useGLTF('/3d/scooter.glb')
+
     return <primitive object={scene} {...props} />
 }
 

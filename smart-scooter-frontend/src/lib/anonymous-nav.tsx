@@ -6,11 +6,12 @@ export default function AnonymousNav() {
                 <li>
                     <strong> Smart Scooter </strong>
                 </li>
-            </ul>
-            <ul>
                 <li>
                     <Link to="/">Home</Link>
                 </li>
+            </ul>
+            <ul>
+
                 <li>
                     <Link to="/login">Login</Link>
                 </li>
