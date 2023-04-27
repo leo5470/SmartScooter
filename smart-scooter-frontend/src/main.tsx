@@ -12,6 +12,7 @@ import Login from "./routes/login";
 import ErrorPage from "./error-page";
 
 import User from "./routes/user"
+import Admin from "./routes/admin";
 
 
 const router = createBrowserRouter([
@@ -25,7 +26,12 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <User></User>
+    element: <User></User>,
+    errorElement: <ErrorPage></ErrorPage>
+  },
+  {
+    path: "/admin",
+    element: <Admin></Admin>,
   }
 ]);
 

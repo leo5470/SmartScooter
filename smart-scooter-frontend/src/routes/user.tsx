@@ -2,8 +2,6 @@ import { useOutlet } from "react-router-dom";
 import UserNav from "../lib/user-nav"
 import Showcase from "../lib/showcase";
 
-import * as THREE from 'three'
-
 export default function User() {
     const outlet = useOutlet();
     return (

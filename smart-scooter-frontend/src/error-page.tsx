@@ -2,11 +2,18 @@ import { useRouteError, isRouteErrorResponse } from "react-router-dom";
 
 export default function ErrorPage() {
     return (
-        <div id="error-page">
-            <h1>Oops!</h1>
-            <p>Sorry, an unexpected error has occurred.</p>
-            <Error></Error>
-        </div>
+        <>
+            <main className="container">
+                <div id="error-page">
+                    <hgroup>
+                        <h1>Oops!</h1>
+                        <h5>Sorry, an unexpected error has occurred.</h5>
+                    </hgroup>
+                    <img src="/image/dancing-cat.gif"></img>
+                    <Error></Error>
+                </div>
+            </main>
+        </>
     );
 }
 

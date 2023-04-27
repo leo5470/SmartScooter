@@ -4,16 +4,16 @@ export default function UserNav() {
         <> <nav className="container-fluid">
             <ul>
                 <li>
-                    <strong> Smart Scooter - User </strong>
+                    <strong> Smart Scooter - Admin </strong>
                 </li>
                 <li>
-                    <Link to="/user/rent">Rent</Link>
+                    <Link to="/admin/search">Search</Link>
                 </li>
                 <li>
-                    <Link to="/user/search">Search</Link>
+                    <Link to="/admin/repair">Repair</Link>
                 </li>
                 <li>
-                    <Link to="/user/recharge">Recharge</Link>
+                    <Link to="/admin/recharge">Recharge</Link>
                 </li>
             </ul>
             <ul>
