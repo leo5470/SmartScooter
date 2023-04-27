@@ -1,5 +1,10 @@
 import AnonymousNav from "../lib/anonymous-nav";
 import { useOutlet } from "react-router-dom";
+
+import Showcase from "../lib/showcase";
+
+import * as THREE from "three"
+
 export default function Home() {
     const outlet = useOutlet();
     return (
@@ -20,7 +25,7 @@ function HomeContent() {
                     <h1>Smart Scooter Platform</h1>
                     <h2>Effortlessly Intelligent</h2>
                 </hgroup>
-                <img src="image/dino-scooter.gif"></img>
+                <Showcase text="" modelLocation={[-20, 0, -100]} modelScale={0.05} modelRotation={[0.3, -1.4, 0]} textLocation={[0, 0, 0]} modelName="city"></Showcase>
             </section>
         </>
     )
