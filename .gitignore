@@ -24,3 +24,9 @@ hs_err_pid*
 
 ### VS Code ###
 .vscode/
+
+### .DS_Store ###
+.DS_Store
+
+### IntelliJ ###
+.idea/

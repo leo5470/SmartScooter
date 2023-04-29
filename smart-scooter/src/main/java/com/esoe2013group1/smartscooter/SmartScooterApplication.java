@@ -9,6 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SmartScooterApplication {
 
+	private CredentialRepository credentialRepository;
+
+	public SmartScooterApplication(CredentialRepository credentialRepository) {
+		this.credentialRepository = credentialRepository;
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(SmartScooterApplication.class, args);
 	}
@@ -17,5 +23,10 @@ public class SmartScooterApplication {
 	public String home() {
 		String description = "Hello World";
 		return description;
+	}
+
+	@GetMapping("/api/admin/users")
+	public Object getUsers(){
+		return credentialRepository.findAll();
 	}
 }
