@@ -1,3 +1,5 @@
+// @ts-nocheck
+// THREE JS have poor typing
 import * as THREE from 'three'
 import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'

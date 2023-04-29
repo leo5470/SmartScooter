@@ -15,7 +15,7 @@ public class SmartScooterApplication {
 
 	@GetMapping("/api")
 	public String home() {
-		String description = new String(getClass().getPackageName());
+		String description = "Hello World";
 		return description;
 	}
 }

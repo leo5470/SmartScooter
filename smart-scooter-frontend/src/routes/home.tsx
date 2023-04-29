@@ -3,8 +3,6 @@ import { useOutlet } from "react-router-dom";
 
 import Showcase from "../lib/showcase";
 
-import * as THREE from "three"
-
 export default function Home() {
     const outlet = useOutlet();
     return (
