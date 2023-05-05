@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SmartScooterApplication {
 
-	private CredentialRepository credentialRepository;
+	private final CredentialRepository credentialRepository;
 
 	public SmartScooterApplication(CredentialRepository credentialRepository) {
 		this.credentialRepository = credentialRepository;
@@ -21,12 +21,12 @@ public class SmartScooterApplication {
 
 	@GetMapping("/api")
 	public String home() {
-		String description = "Hello World";
+		String description = getClass().getPackageName();
 		return description;
 	}
 
 	@GetMapping("/api/admin/users")
-	public Object getUsers(){
+	public Object getUsers() {
 		return credentialRepository.findAll();
 	}
 }
