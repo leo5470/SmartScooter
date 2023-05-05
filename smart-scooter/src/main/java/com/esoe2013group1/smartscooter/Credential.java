@@ -14,7 +14,9 @@ public class Credential {
             generator = "Credentials"
     )
     private String username;
+    @Column(nullable=false)
     private String password;
+    @Column(nullable = false)
     private Boolean admin;
 
     public String getUsername() {
