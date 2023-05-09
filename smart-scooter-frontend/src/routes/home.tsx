@@ -1,7 +1,7 @@
-import AnonymousNav from "../lib/anonymous-nav";
+import AnonymousNav from "../component/anonymous-nav";
 import { useOutlet } from "react-router-dom";
 
-import Showcase from "../lib/showcase";
+import Showcase from "../component/showcase";
 
 export default function Home() {
     const outlet = useOutlet();

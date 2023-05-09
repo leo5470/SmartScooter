@@ -1,6 +1,6 @@
 import { useOutlet } from "react-router-dom";
-import AdminNav from "../lib/admin-nav"
-import Showcase from "../lib/showcase";
+import AdminNav from "../component/admin-nav"
+import Showcase from "../component/showcase";
 
 export default function Admin() {
     const outlet = useOutlet();

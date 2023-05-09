@@ -1,6 +1,6 @@
 import { useOutlet } from "react-router-dom";
-import UserNav from "../lib/user-nav"
-import Showcase from "../lib/showcase";
+import UserNav from "../component/user-nav"
+import Showcase from "../component/showcase";
 
 export default function User() {
     const outlet = useOutlet();
