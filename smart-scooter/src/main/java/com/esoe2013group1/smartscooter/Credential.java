@@ -13,6 +13,8 @@ public class Credential {
             strategy = GenerationType.SEQUENCE,
             generator = "Credentials"
     )
+    private Integer id;
+    @Column(nullable = false)
     private String username;
     @Column(nullable=false)
     private String password;
@@ -41,5 +43,13 @@ public class Credential {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }
