@@ -1,8 +1,9 @@
 package com.esoe2013group1.smartscooter;
 
+import com.esoe2013group1.smartscooter.exception.*;
+import com.esoe2013group1.smartscooter.repo.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
@@ -11,11 +12,14 @@ public class SmartScooterApplication {
 
 	private final CredentialRepository credentialRepository;
 	private final ScooterRepository scooterRepository;
+	private final LoginStatusRepository loginStatusRepository;
 
 	public SmartScooterApplication(CredentialRepository credentialRepository,
-								   ScooterRepository scooterRepository) {
+								   ScooterRepository scooterRepository,
+								   LoginStatusRepository loginStatusRepository) {
 		this.credentialRepository = credentialRepository;
 		this.scooterRepository = scooterRepository;
+		this.loginStatusRepository = loginStatusRepository;
 
 	}
 
@@ -42,7 +46,7 @@ public class SmartScooterApplication {
 		return true;
 	}
 
-	// Login function test: Postman 200 OK
+	// Passed
 	@PostMapping("/api/login")
 	public String login(@RequestBody LoginData data){
 		Credential credit = credentialRepository.findByUsername(data.getUsername());
@@ -53,23 +57,34 @@ public class SmartScooterApplication {
 			if(credit.getPassword().equals(data.getPassword())){
 				System.out.println(data.getUsername() + " login attempt successful");
 				String token = Token.generateToken();
+				LoginStatus status = loginStatusRepository.getReferenceById(credit.getId());
+				status.setTok(token);
+				status.setLogin(true);
+				loginStatusRepository.saveAndFlush(status);
 				return String.format("""
 				{
 					"success": true,
-					"token": %s,
-					"user": "桐谷和人"
+					"token": "%s"
 				}""", token);
-			}
-			else{
+			} else{
 				throw new AuthFailedException();
 			}
 		}catch (Exception e) {
-			return e.getMessage();
+			System.out.println(e.getMessage());
+			return """
+					{
+						"success": false,
+					}""";
 		}
 	}
 
+	// Passed
 	@PostMapping("/api/logout")
-	public boolean logout(@RequestBody String token){
+	public boolean logout(@RequestBody Token token){
+		LoginStatus status = loginStatusRepository.findByTok(token.getToken()); // Can't get status: NullPointerException
+		status.setLogin(false);
+		status.setTok(null);
+		loginStatusRepository.saveAndFlush(status);
 		System.out.println(token);
 		return true;
 	}
