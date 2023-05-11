@@ -85,7 +85,7 @@ public class SmartScooterApplication {
 		status.setLogin(false);
 		status.setTok(null);
 		loginStatusRepository.saveAndFlush(status);
-		System.out.println(token);
+		System.out.println("Token " + token + " logged out.");
 		return true;
 	}
 }
