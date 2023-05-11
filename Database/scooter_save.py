@@ -20,12 +20,15 @@ print("PostgreSQL db connected.")
 # Open a cursor to perform database operations
 cur = conn.cursor()
 
+i = 0
+
 # Insert each scooter into the database
 for scooter in data:
     cur.execute("""
-        INSERT INTO scooter (no, power, lat, lng)
-        VALUES (%s, %s, %s, %s)
-    """, (scooter['no'], scooter['power'], scooter['lat'], scooter['lng']))
+        INSERT INTO scooter (id, plate, battery_level, lat, lng, status)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (i, scooter['no'], scooter['power'], scooter['lat'], scooter['lng'], "ready"))
+    i += 1
 
 # Commit the changes and close the cursor and connection
 conn.commit()

@@ -10,9 +10,13 @@ import org.springframework.web.bind.annotation.*;
 public class SmartScooterApplication {
 
 	private final CredentialRepository credentialRepository;
+	private final ScooterRepository scooterRepository;
 
-	public SmartScooterApplication(CredentialRepository credentialRepository) {
+	public SmartScooterApplication(CredentialRepository credentialRepository,
+								   ScooterRepository scooterRepository) {
 		this.credentialRepository = credentialRepository;
+		this.scooterRepository = scooterRepository;
+
 	}
 
 	public static void main(String[] args) {
@@ -41,13 +45,27 @@ public class SmartScooterApplication {
 	// Login function test: Postman 200 OK
 	@PostMapping("/api/login")
 	public String login(@RequestBody LoginData data){
-		System.out.println(data.toString());
-		return """
+		Credential credit = credentialRepository.findByUsername(data.getUsername());
+		try{
+			if(credit == null){
+				throw new UserDoesNotExistException(data.getUsername());
+			}
+			if(credit.getPassword().equals(data.getPassword())){
+				System.out.println(data.getUsername() + " login attempt successful");
+				String token = Token.generateToken();
+				return String.format("""
 				{
 					"success": true,
-					"token": "不是不爆，十秒未到",
+					"token": %s,
 					"user": "桐谷和人"
-				}""";
+				}""", token);
+			}
+			else{
+				throw new AuthFailedException();
+			}
+		}catch (Exception e) {
+			return e.getMessage();
+		}
 	}
 
 	@PostMapping("/api/logout")
