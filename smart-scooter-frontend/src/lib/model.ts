@@ -24,7 +24,7 @@ export class Scooter extends PhysicalObject{
 }
 
 export class User extends PhysicalObject{
-    constructor(user_id:number , location:Location  ,public username:string ,public credit_card:string , public coupons:Array<Coupon>){
+    constructor(user_id:number , location:Location  ,public username:string ,public credit_card:string , public coupons:Array<Coupon> , public is_admin:boolean){
         super(user_id , location);
     }
 }
