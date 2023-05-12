@@ -58,23 +58,28 @@ public class SmartScooterApplication {
 				System.out.println(data.getUsername() + " login attempt successful");
 				String token = Token.generateToken();
 				LoginStatus status = loginStatusRepository.getReferenceById(credit.getId());
+				if(status.getTok() != null){
+					throw new ActiveSessionException(data.getUsername());
+				}
 				status.setTok(token);
 				status.setLogin(true);
 				loginStatusRepository.saveAndFlush(status);
 				return String.format("""
 				{
 					"success": true,
-					"token": "%s"
+					"token": "%s",
+					"message": ""
 				}""", token);
 			} else{
 				throw new AuthFailedException();
 			}
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
-			return """
+			return String.format("""
 					{
 						"success": false,
-					}""";
+						"message": "%s"
+					}""", e.getMessage());
 		}
 	}
 
