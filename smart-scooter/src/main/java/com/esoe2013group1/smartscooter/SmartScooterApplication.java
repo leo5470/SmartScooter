@@ -1,7 +1,10 @@
 package com.esoe2013group1.smartscooter;
 
+import com.esoe2013group1.smartscooter.entity.*;
 import com.esoe2013group1.smartscooter.exception.*;
+import com.esoe2013group1.smartscooter.json.*;
 import com.esoe2013group1.smartscooter.repo.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
@@ -9,18 +12,23 @@ import org.springframework.web.bind.annotation.*;
 @SpringBootApplication
 @RestController
 public class SmartScooterApplication {
-
+	// Repos
 	private final CredentialRepository credentialRepository;
 	private final ScooterRepository scooterRepository;
 	private final LoginStatusRepository loginStatusRepository;
+	private final UserRepository userRepository;
+
+	// Jackson
+	private final ObjectMapper mapper = new ObjectMapper();
 
 	public SmartScooterApplication(CredentialRepository credentialRepository,
 								   ScooterRepository scooterRepository,
-								   LoginStatusRepository loginStatusRepository) {
+								   LoginStatusRepository loginStatusRepository,
+								   UserRepository userRepository) {
 		this.credentialRepository = credentialRepository;
 		this.scooterRepository = scooterRepository;
 		this.loginStatusRepository = loginStatusRepository;
-
+		this.userRepository = userRepository;
 	}
 
 	public static void main(String[] args) {
@@ -41,9 +49,27 @@ public class SmartScooterApplication {
 
 	// Signup function test: Postman 200 OK
 	@PostMapping("/api/signup")
-	public boolean signup(@RequestBody SignupData data){
-		System.out.println(data.toString());
-		return true;
+	public String signup(@RequestBody SignupData data){
+		try{
+			UserData userData = new UserData(data);
+
+			User user = new User(userData);
+
+			Credential credential = new Credential(data);
+
+			LoginStatus loginStatus = new LoginStatus();
+
+			userRepository.saveAndFlush(user);
+			credentialRepository.saveAndFlush(credential);
+			loginStatusRepository.saveAndFlush(loginStatus);
+
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
 	}
 
 	// Passed
@@ -64,33 +90,36 @@ public class SmartScooterApplication {
 				status.setTok(token);
 				status.setLogin(true);
 				loginStatusRepository.saveAndFlush(status);
-				return String.format("""
-				{
-					"success": true,
-					"token": "%s",
-					"message": ""
-				}""", token);
+				LoginJSON loginJSON = new LoginJSON(true, token, "");
+				return loginJSON.makeJson(mapper);
 			} else{
 				throw new AuthFailedException();
 			}
 		}catch (Exception e) {
 			System.out.println(e.getMessage());
-			return String.format("""
-					{
-						"success": false,
-						"message": "%s"
-					}""", e.getMessage());
+			LoginJSON loginJSON = new LoginJSON(false, "", e.getMessage());
+			return loginJSON.makeJson(mapper);
 		}
 	}
 
 	// Passed
-	@PostMapping("/api/logout")
-	public boolean logout(@RequestBody Token token){
-		LoginStatus status = loginStatusRepository.findByTok(token.getToken()); // Can't get status: NullPointerException
-		status.setLogin(false);
-		status.setTok(null);
-		loginStatusRepository.saveAndFlush(status);
-		System.out.println("Token " + token + " logged out.");
-		return true;
+	@GetMapping("/api/logout")
+	public String logout(@RequestHeader("token") String token){
+		try{
+			LoginStatus status = loginStatusRepository.findByTok(token);
+			if(status == null){
+				throw new TokenDoesNotExistException();
+			}
+			status.setLogin(false);
+			status.setTok(null);
+			loginStatusRepository.saveAndFlush(status);
+			System.out.println("Token " + token + " logged out.");
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
+		} catch (Exception e){
+			System.out.println(e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
 	}
 }

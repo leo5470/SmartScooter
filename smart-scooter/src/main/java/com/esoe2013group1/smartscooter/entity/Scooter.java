@@ -1,6 +1,5 @@
-package com.esoe2013group1.smartscooter;
+package com.esoe2013group1.smartscooter.entity;
 
-import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 
 @Entity
@@ -8,7 +7,8 @@ public class Scooter {
     @Id
     @SequenceGenerator(
             name = "Scooters",
-            sequenceName = "Scooters"
+            sequenceName = "Scooters",
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

@@ -1,4 +1,4 @@
-package com.esoe2013group1.smartscooter;
+package com.esoe2013group1.smartscooter.entity;
 
 import jakarta.persistence.*;
 
@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 public class LoginStatus {
     @Id
     @SequenceGenerator(
-            name = "LoginStatusTable",
-            sequenceName = "LoginStatusTable"
+            name = "LoginStatusSeq",
+            sequenceName = "LoginStatusSeq",
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "LoginStatusTable"
+            generator = "LoginStatusSeq"
     )
     private Integer id;
     @Column(nullable = false)
@@ -41,5 +42,10 @@ public class LoginStatus {
 
     public void setTok(String token) {
         this.tok = token;
+    }
+
+    public LoginStatus(){
+        isLogin = false;
+        tok = null;
     }
 }

@@ -1,8 +1,7 @@
 package com.esoe2013group1.smartscooter.repo;
 
-import com.esoe2013group1.smartscooter.Credential;
+import com.esoe2013group1.smartscooter.entity.Credential;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository

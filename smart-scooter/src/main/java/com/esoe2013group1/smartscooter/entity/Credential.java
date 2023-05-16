@@ -1,5 +1,6 @@
-package com.esoe2013group1.smartscooter;
+package com.esoe2013group1.smartscooter.entity;
 
+import com.esoe2013group1.smartscooter.SignupData;
 import jakarta.persistence.*;
 
 @Entity
@@ -7,7 +8,8 @@ public class Credential {
     @Id
     @SequenceGenerator(
             name = "Credentials",
-            sequenceName = "Credentials"
+            sequenceName = "Credentials",
+            allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -51,5 +53,13 @@ public class Credential {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Credential(){}
+
+    public Credential(SignupData data){
+        username = data.getUsername();
+        password = data.getPassword();
+        admin = false;
     }
 }
