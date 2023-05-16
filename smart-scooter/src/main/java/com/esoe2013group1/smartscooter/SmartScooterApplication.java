@@ -51,6 +51,13 @@ public class SmartScooterApplication {
 	@PostMapping("/api/signup")
 	public String signup(@RequestBody SignupData data){
 		try{
+			if(userRepository.existsByUsername(data.getUsername())){
+				throw new UsernameInUseException(data.getUsername());
+			}
+			if(userRepository.existsByEmail(data.getEmail())){
+				throw new EmailInUseException(data.getEmail());
+			}
+
 			UserData userData = new UserData(data);
 
 			User user = new User(userData);
@@ -121,5 +128,33 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
 		}
+	}
+
+	@PostMapping("/api/update-userinfo")
+	public String updateUserInfo(@RequestHeader("token") String token, @RequestBody User user){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if (loginStatus == null) {
+				throw new TokenDoesNotExistException();
+			}
+			int id = loginStatus.getId();
+			if(user.getId() != id){
+				throw new InvalidSessionException();
+			}
+
+			userRepository.saveAndFlush(user);
+
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
+	}
+
+	@GetMapping("/api/get-userinfo")
+	public String getUserInfo(@RequestHeader("token") String token){
+		return "";
 	}
 }
