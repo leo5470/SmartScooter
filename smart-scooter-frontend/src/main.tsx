@@ -14,6 +14,7 @@ import ErrorPage from "./error-page";
 import User from "./routes/user"
 import Admin from "./routes/admin";
 
+import Settings from "./component/settings";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Admin></Admin>,
+  },
+  {
+    path: "/settings",
+    element: <Settings></Settings>
   },
   {
     path: "/error",

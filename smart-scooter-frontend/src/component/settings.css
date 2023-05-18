@@ -1,0 +1,57 @@
+.settings-container {
+  display: flex;
+}
+
+.settings-menu {
+  width: 200px;
+}
+
+.settings-menu-item {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ccc;
+  transition: background-color 0.3s;
+}
+
+.settings-menu-item:hover {
+  background-color: #e4e4e4;
+}
+
+.settings-menu-item.active {
+  background-color: #ddd;
+}
+
+.settings-content {
+  flex: 1;
+  padding: 20px;
+}
+
+.settings-content > div {
+  display: none;
+}
+
+.settings-content > div.show {
+  display: block;
+}
+
+.notification-list {
+  margin-top: 20px;
+}
+
+.notification-item {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.notification-details {
+  margin-bottom: 10px;
+}
+
+.notification-details h3 {
+  margin: 0;
+}
+
+.notification-details p {
+  margin: 5px 0;
+}
