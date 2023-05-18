@@ -1,5 +1,7 @@
 package com.esoe2013group1.smartscooter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Random;
 
 public class Location {
@@ -8,8 +10,11 @@ public class Location {
     public static final double lngMax = 121.567045;
     public static final double lngMin = 121.511162;
 
-    private double lat;
-    private double lng;
+    @JsonProperty("lat")
+    private Double lat;
+
+    @JsonProperty("lng")
+    private Double lng;
 
     public double getLat() {
         return lat;
@@ -27,9 +32,13 @@ public class Location {
         this.lng = lng;
     }
 
-    public Location(){
-        Random r = new Random();
-        lat = latMin + (latMax - latMin) * r.nextDouble();
-        lng = lngMin + (lngMax - lngMin) * r.nextDouble();
+    public Location(){}
+
+    public Location(boolean random){
+        if(random) {
+            Random r = new Random();
+            lat = latMin + (latMax - latMin) * r.nextDouble();
+            lng = lngMin + (lngMax - lngMin) * r.nextDouble();
+        }
     }
 }

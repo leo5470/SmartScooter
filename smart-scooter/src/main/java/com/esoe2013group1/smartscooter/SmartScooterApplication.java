@@ -90,7 +90,7 @@ public class SmartScooterApplication {
 			if(credit.getPassword().equals(data.getPassword())){
 				System.out.println(data.getUsername() + " login attempt successful");
 				String token = Token.generateToken();
-				LoginStatus status = loginStatusRepository.getReferenceById(credit.getId());
+				LoginStatus status = loginStatusRepository.findById(credit.getId()).orElseThrow();
 				if(status.getTok() != null){
 					throw new ActiveSessionException(data.getUsername());
 				}
@@ -130,17 +130,22 @@ public class SmartScooterApplication {
 		}
 	}
 
+	// Passed
 	@PostMapping("/api/update-userinfo")
-	public String updateUserInfo(@RequestHeader("token") String token, @RequestBody User user){
+	public String updateUserInfo(@RequestHeader("token") String token, @RequestBody UserData userData){
 		try{
 			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
 			if (loginStatus == null) {
 				throw new TokenDoesNotExistException();
 			}
 			int id = loginStatus.getId();
-			if(user.getId() != id){
+			if(userData.getId() != id){
 				throw new InvalidSessionException();
 			}
+
+			User user = userRepository.findById(id).orElseThrow();
+
+			user.copyFromData(userData);
 
 			userRepository.saveAndFlush(user);
 
@@ -153,8 +158,27 @@ public class SmartScooterApplication {
 		}
 	}
 
+	// Passed
 	@GetMapping("/api/get-userinfo")
 	public String getUserInfo(@RequestHeader("token") String token){
-		return "";
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+			Integer id = loginStatus.getId();
+			User user = userRepository.findById(id).orElseThrow(InvalidSessionException::new);
+
+			UserData userData = new UserData(user);
+
+			UserDataJSON userDataJSON = new UserDataJSON(userData);
+
+			return userDataJSON.makeJson(mapper);
+
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+			UserDataJSON userDataJSON = new UserDataJSON(e.getMessage());
+			return userDataJSON.makeJson(mapper);
+		}
 	}
 }

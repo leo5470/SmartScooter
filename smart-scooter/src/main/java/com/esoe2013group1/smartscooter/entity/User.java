@@ -103,7 +103,7 @@ public class User {
     }
 
     public void copyFromData(UserData userData) throws DifferentIdentifierException {
-        if (userData.getId() != null && userData.getId().equals(id)) {
+        if (userData.getId() != null && !userData.getId().equals(id)) {
             throw new DifferentIdentifierException(userData.getId(), id);
         }
         username = userData.getUsername();

@@ -9,4 +9,5 @@ public interface UserRepository
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
+
 }

@@ -1,5 +1,6 @@
 package com.esoe2013group1.smartscooter;
 
+import com.esoe2013group1.smartscooter.entity.User;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserData {
@@ -72,8 +73,27 @@ public class UserData {
         this.tel = tel;
     }
 
+    public void copyFromData(User user){
+        id = user.getId();
+        username = user.getUsername();
+        location.setLat(user.getLat());
+        location.setLng(user.getLng());
+        coupons = user.getCoupons();
+        creditCard = user.getCreditCard();
+        email = user.getEmail();
+        tel = user.getTel();
+    }
+
     public UserData(SignupData signupData){
         username = signupData.getUsername();
         email = signupData.getEmail();
+        location = new Location(true); // Random assign location for user.
     }
+
+    public UserData(User user){
+        location = new Location();
+        copyFromData(user);
+    }
+
+    public UserData(){}
 }
