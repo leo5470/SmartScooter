@@ -15,6 +15,9 @@ import User from "./routes/user"
 import Admin from "./routes/admin";
 
 import Settings from "./component/settings";
+import Rent from "./component/rent";
+import Search from "./component/search";
+import Recharge from "./component/recharge";
 
 const router = createBrowserRouter([
   {
@@ -30,16 +33,15 @@ const router = createBrowserRouter([
     element: <User></User>,
     errorElement: <ErrorPage></ErrorPage>,
     children: [
-      { path: "settings", element: <Settings></Settings> }
+      { path: "settings", element: <Settings></Settings> },
+      { path: "rent", element: <Rent></Rent> },
+      { path: "search", element: <Search></Search> },
+      { path: "recharge", element: <Recharge></Recharge> }
     ]
   },
   {
     path: "/admin",
     element: <Admin></Admin>,
-  },
-  {
-    path: "/settings",
-    element: <Settings></Settings>
   },
   {
     path: "/error",
