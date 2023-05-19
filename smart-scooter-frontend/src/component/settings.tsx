@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import './settings.css';
 
+import Button from '@mui/material/Button';
+
+
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('account');
   const [showModal, setShowModal] = useState(false);
@@ -15,6 +18,7 @@ export default function Settings() {
 
   return (
     <div>
+      <Button variant="contained">Hello World</Button>
       <nav aria-label="breadcrumb">
         <ul>
           <li>
