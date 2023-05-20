@@ -9,6 +9,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @SpringBootApplication
 @RestController
 public class SmartScooterApplication {
@@ -17,6 +19,7 @@ public class SmartScooterApplication {
 	private final ScooterRepository scooterRepository;
 	private final LoginStatusRepository loginStatusRepository;
 	private final UserRepository userRepository;
+	private final StationRepository stationRepository;
 
 	// Jackson
 	private final ObjectMapper mapper = new ObjectMapper();
@@ -24,11 +27,13 @@ public class SmartScooterApplication {
 	public SmartScooterApplication(CredentialRepository credentialRepository,
 								   ScooterRepository scooterRepository,
 								   LoginStatusRepository loginStatusRepository,
-								   UserRepository userRepository) {
+								   UserRepository userRepository,
+								   StationRepository stationRepository) {
 		this.credentialRepository = credentialRepository;
 		this.scooterRepository = scooterRepository;
 		this.loginStatusRepository = loginStatusRepository;
 		this.userRepository = userRepository;
+		this.stationRepository = stationRepository;
 	}
 
 	public static void main(String[] args) {
@@ -73,7 +78,7 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
 			return generalJSON.makeJson(mapper);
 		}catch(Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
 		}
@@ -103,7 +108,7 @@ public class SmartScooterApplication {
 				throw new AuthFailedException();
 			}
 		}catch (Exception e) {
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			LoginJSON loginJSON = new LoginJSON(false, "", e.getMessage());
 			return loginJSON.makeJson(mapper);
 		}
@@ -124,7 +129,7 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
 			return generalJSON.makeJson(mapper);
 		} catch (Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
 		}
@@ -152,7 +157,7 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
 			return generalJSON.makeJson(mapper);
 		}catch (Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
 		}
@@ -172,13 +177,110 @@ public class SmartScooterApplication {
 			UserData userData = new UserData(user);
 
 			UserDataJSON userDataJSON = new UserDataJSON(userData);
-
 			return userDataJSON.makeJson(mapper);
 
 		}catch (Exception e){
-			System.out.println(e.getMessage());
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			UserDataJSON userDataJSON = new UserDataJSON(e.getMessage());
 			return userDataJSON.makeJson(mapper);
 		}
 	}
+
+	@GetMapping("/api/user/search/scooter")
+	public String userSearchScooter(@RequestHeader("token") String token, @RequestParam int range){
+		try {
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null) {
+				throw new TokenDoesNotExistException();
+			}
+
+			int id = loginStatus.getId();
+			User user = userRepository.findById(id).orElseThrow();
+			Location location = new Location(user.getLat(), user.getLng());
+
+			Location eastMostCoordinate = Location.getCoordinate(location, Location.Direction.EAST, range);
+			Location westMostCoordinate = Location.getCoordinate(location, Location.Direction.WEST, range);
+			Location northMostCoordinate = Location.getCoordinate(location, Location.Direction.NORTH, range);
+			Location southMostCoordinate = Location.getCoordinate(location, Location.Direction.SOUTH, range);
+
+			double maxLng = northMostCoordinate.getLng();
+			double minLng = southMostCoordinate.getLng();
+			double maxLat = eastMostCoordinate.getLat();
+			double minLat = westMostCoordinate.getLat();
+
+			List<Scooter> scooterList;
+			scooterList = scooterRepository.findAllByLatBetweenAndLngBetween(minLat, maxLat, minLng, maxLng);
+
+			ListJSON<Scooter> listJSON = new ListJSON<>(scooterList);
+
+			return listJSON.makeJson(mapper);
+
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			ListJSON<Object> listJSON = new ListJSON<>(e.getMessage());
+			return listJSON.makeJson(mapper);
+		}
+	}
+
+	@GetMapping("/api/user/search/station")
+	public String userSearchStation(@RequestHeader("token") String token, @RequestParam int range){
+		try {
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null) {
+				throw new TokenDoesNotExistException();
+			}
+
+			int id = loginStatus.getId();
+			User user = userRepository.findById(id).orElseThrow();
+			Location location = new Location(user.getLat(), user.getLng());
+
+			Location eastMostCoordinate = Location.getCoordinate(location, Location.Direction.EAST, range);
+			Location westMostCoordinate = Location.getCoordinate(location, Location.Direction.WEST, range);
+			Location northMostCoordinate = Location.getCoordinate(location, Location.Direction.NORTH, range);
+			Location southMostCoordinate = Location.getCoordinate(location, Location.Direction.SOUTH, range);
+
+			double maxLng = northMostCoordinate.getLng();
+			double minLng = southMostCoordinate.getLng();
+			double maxLat = eastMostCoordinate.getLat();
+			double minLat = westMostCoordinate.getLat();
+
+			List<Station> stationList;
+			stationList = stationRepository.findAllByLatBetweenAndLngBetween(minLat, maxLat, minLng, maxLng);
+
+			ListJSON<Station> listJSON = new ListJSON<>(stationList);
+
+			return listJSON.makeJson(mapper);
+
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			ListJSON<Object> listJSON = new ListJSON<>(e.getMessage());
+			return listJSON.makeJson(mapper);
+		}
+	}
+
+	@PostMapping("/api/admin/repair")
+	public String adminRepair(@RequestHeader("token") String token, @RequestBody ScooterID scooterID){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if (loginStatus == null) {
+				throw new TokenDoesNotExistException();
+			}
+			Scooter scooter = scooterRepository.findById(scooterID.getId()).orElseThrow();
+			String status = scooter.getStatus();
+			if(!("malfunction".equals(status))){
+				throw new OperationException(status);
+			}
+			scooter.setStatus("ready");
+			// scooter.setBattery_level(100);
+
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
+
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
+	}
+
 }
