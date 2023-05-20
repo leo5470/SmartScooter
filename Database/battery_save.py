@@ -23,7 +23,7 @@ cur = conn.cursor()
 # Insert each location into the database
 for location in data:
     cur.execute("""
-        INSERT INTO battery (no, lat, lng)
+        INSERT INTO station (id, lat, lng)
         VALUES (%s, %s, %s)
     """, (location['no'], location['lat'], location['lng']))
 
