@@ -1,5 +1,19 @@
+import Select from 'react-select';
+import { useState } from "react"
 
 export default function AccountSettings() {
+    const cityOptions = [
+        {
+            value: "taipei", label: "Taipei"
+        }
+    ]
+    const districtOptions = [
+        {
+            value: "daan", label: "Daan district"
+        }
+    ]
+    const [selectedCity, setSelectedCity] = useState(cityOptions[0]);
+    const [selectedDistrict, setSelectedDistrict] = useState(districtOptions[0]);
     return (
         <main className="container">
             <article>
@@ -9,29 +23,29 @@ export default function AccountSettings() {
                         <h2></h2>
                     </hgroup>
                     <form>
-                     <label htmlFor="firstname">
-                            First name
-                            <input
-                                type="text"
-                                id="firstname"
-                                name="firstname"
-                                placeholder="First name"
-                                required
-                            />
-                        </label>
+                        <div className="grid">
+                            <label htmlFor="firstname">
+                                First name
+                                <input
+                                    type="text"
+                                    id="firstname"
+                                    name="firstname"
+                                    placeholder="First name"
+                                    required
+                                />
+                            </label>
 
-                        <label htmlFor="lastname">
-                            Last name
-                            <input
-                                type="text"
-                                id="lastname"
-                                name="lastname"
-                                placeholder="Last name"
-                                required
-                            />
-                        </label>
-
-
+                            <label htmlFor="lastname">
+                                Last name
+                                <input
+                                    type="text"
+                                    id="lastname"
+                                    name="lastname"
+                                    placeholder="Last name"
+                                    required
+                                />
+                            </label>
+                        </div>
                         <label htmlFor="email">Email address</label>
                         <input
                             type="email"
@@ -40,17 +54,26 @@ export default function AccountSettings() {
                             placeholder="Email address"
                             required
                         />
+                        <div></div>
+                        <div className="grid">
+                            <div>
+                                <label htmlFor="city">City</label>
+                                <Select
+                                    defaultValue={selectedCity}
+                                    onChange={setSelectedCity}
+                                    options={cityOptions}
+                                />
 
-                        <label htmlFor="city">City</label>
-                        <select id="city" required>
-                            <option value="" selected>Select a City</option>
-                            <option>…</option>
-                        </select>
-                        <label htmlFor="district">District</label>
-                        <select id="district" required>
-                            <option value="" selected>Select a district</option>
-                            <option>…</option>
-                        </select>
+                            </div>
+                            <div>
+                                <label htmlFor="district">District</label>
+                                <Select
+                                    defaultValue={selectedDistrict}
+                                    onChange={setSelectedDistrict}
+                                    options={districtOptions}
+                                />
+                            </div>
+                        </div>
                         <label htmlFor="street">
                             Street
                             <input
@@ -87,7 +110,7 @@ export default function AccountSettings() {
                         <button
                             type="submit"
                             className="contrast"
-                            onClick="event.preventDefault()"
+                            onClick={(event) => event.preventDefault()}
                         >Save Change</button>
                     </form>
                 </div>

@@ -1,16 +1,4 @@
-article div:nth-of-type(2) {
-    display: none;
-    background-color: #374956;
-    background-image: url("/image/scooter.jpg");
-    background-position: center;
-    background-size: cover;
-  }
-  
-  @media (min-width: 992px) {
-    .grid>div:nth-of-type(2) {
-      display: block;
-    }
-  }
+
   *, *::before, *::after {
     box-sizing: border-box;
   }

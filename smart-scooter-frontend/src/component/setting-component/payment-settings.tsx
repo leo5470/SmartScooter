@@ -1,5 +1,4 @@
 import AddNewCard from "./add-new-card"
-import "./setting-component-css/add-new-card.css"
 
 export default function PaymentSettings() {
     return (
@@ -14,11 +13,11 @@ export default function PaymentSettings() {
 
                     <fieldset>
                         <label htmlFor="small">
-                            <input type="radio" id="small" name="size" value="small" checked />
+                            <input type="radio" id="small" name="size" value="small" />
                             玉山商業銀行 **** 1234
                         </label>
                         <label htmlFor="small">
-                            <input type="radio" id="small" name="size" value="small" checked />
+                            <input type="radio" id="small" name="size" value="small" />
                             兆豐國際商業銀行 **** 5678
                         </label>
                         <p></p>

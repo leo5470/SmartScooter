@@ -1,4 +1,4 @@
-import "./setting-component-css/add-new-card.css"
+import "./setting-component-css/add-new-card.scoped.css"
 
 export default function AddNewCard() {
     return (

@@ -8,7 +8,7 @@ import NotificationSettings from './setting-component/notification-settings';
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('account');
 
-  const handleTabClick = (tab) => {
+  const handleTabClick = (tab: string) => {
     setActiveTab(tab);
   };
 

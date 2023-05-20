@@ -1,9 +1,9 @@
-import "./login.css"
+import "./login.scoped.css"
 export default function Login() {
     return (
         <>
             <section>
-                <article className="grid">
+                <article className="grid login" >
                     <div>
                         <h1>Sign in</h1>
                         <form>
