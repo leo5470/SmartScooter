@@ -5,6 +5,7 @@ import com.esoe2013group1.smartscooter.exception.*;
 import com.esoe2013group1.smartscooter.json.*;
 import com.esoe2013group1.smartscooter.repo.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
@@ -186,8 +187,8 @@ public class SmartScooterApplication {
 		}
 	}
 
-	@GetMapping("/api/user/search/scooter")
-	public String userSearchScooter(@RequestHeader("token") String token, @RequestParam int range){
+	@GetMapping(value = {"/api/user/search/scooter", "/api/admin/search/scooter"})
+	public String userSearchScooter(@RequestHeader("token") String token, @RequestParam int range, HttpServletRequest request){
 		try {
 			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
 			if(loginStatus == null) {
@@ -195,6 +196,11 @@ public class SmartScooterApplication {
 			}
 
 			int id = loginStatus.getId();
+			Credential credential = credentialRepository.findById(id).orElseThrow();
+			if(request.getRequestURI().equals("/api/admin/search/scooter") && !credential.getAdmin()){
+				throw new PermissionDeniedException();
+			}
+
 			User user = userRepository.findById(id).orElseThrow();
 			Location location = new Location(user.getLat(), user.getLng());
 
@@ -209,7 +215,12 @@ public class SmartScooterApplication {
 			double minLat = westMostCoordinate.getLat();
 
 			List<Scooter> scooterList;
-			scooterList = scooterRepository.findAllByLatBetweenAndLngBetween(minLat, maxLat, minLng, maxLng);
+			if(request.getRequestURI().equals("/api/admin/search/scooter")) {
+				scooterList = scooterRepository.findAllByLatBetweenAndLngBetween(minLat, maxLat, minLng, maxLng);
+			} else{
+				scooterList = scooterRepository.findAllByLatBetweenAndLngBetweenAndStatus
+												(minLat, maxLat, minLng, maxLng, "ready");
+			}
 
 			ListJSON<Scooter> listJSON = new ListJSON<>(scooterList);
 
