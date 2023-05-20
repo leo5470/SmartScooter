@@ -44,12 +44,10 @@ export default function Settings() {
 
         <div className="settings-content">
           <div className={`account-settings ${activeTab === 'account' ? 'show' : ''}`}>
-            <h2>Account Settings</h2>
             <AccountSettings />
           </div>
 
           <div className={`payment-settings ${activeTab === 'payment' ? 'show' : ''}`}>
-            <h2>Payment Settings</h2>
             <PaymentSettings />
           </div>
 
