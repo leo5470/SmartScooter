@@ -15,10 +15,12 @@ export default function PaymentSettings() {
                     <fieldset>
                         <label htmlFor="small">
                             <input type="radio" id="small" name="size" value="small" checked />
+                            <img width="48" height="48" src="https://img.icons8.com/color/48/visa.png" alt="visa"/>
                             玉山商業銀行 **** 1234
                         </label>
                         <label htmlFor="small">
                             <input type="radio" id="small" name="size" value="small" checked />
+                            <img width="48" height="48" src="https://img.icons8.com/color/48/mastercard.png" alt="mastercard"/>
                             兆豐國際商業銀行 **** 5678
                         </label>
                         <p></p>
