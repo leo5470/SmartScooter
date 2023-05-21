@@ -9,6 +9,11 @@ export default function CouponSettings() {
     };
     return (
         <div>
+            <article>
+                <hgroup>
+                <h1>Coupon Settings</h1>
+                <h2></h2>
+                </hgroup>
             <select>
                 <option value="time">Sort by Time</option>
                 <option value="discount">Sort by Discount</option>
@@ -27,6 +32,7 @@ export default function CouponSettings() {
                     </button>
                 </div>
             </div>
+            </article>
         </div>
     )
 }

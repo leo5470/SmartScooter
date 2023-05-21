@@ -20,7 +20,7 @@ export default function AccountSettings() {
                 <div>
                     <hgroup>
                         <h1>Account Settings</h1>
-                        <h2></h2>
+                        <h2>Add information about yourself</h2>
                     </hgroup>
                     <form>
                         <div className="grid">

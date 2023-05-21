@@ -1,24 +1,40 @@
 .settings-container {
   display: flex;
+  position: relative;
 }
 
 .settings-menu {
   width: 200px;
+  position: relative;
+  margin-top: 60px;
+}
+
+.profile-pic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-pic-img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 100px;
 }
 
 .settings-menu-item {
   padding: 10px;
   cursor: pointer;
-  border-bottom: 1px solid #ccc;
-  transition: background-color 0.3s;
+  transition: background-color 0.4s;
 }
 
 .settings-menu-item:hover {
-  background-color: #e4e4e4;
+  background-color: #526D82;
 }
 
 .settings-menu-item.active {
-  background-color: #ddd;
+  background-color: #025464;
 }
 
 .settings-content {
@@ -32,10 +48,6 @@
 
 .settings-content > div.show {
   display: block;
-}
-
-.notification-list {
-  margin-top: 20px;
 }
 
 .notification-item {
