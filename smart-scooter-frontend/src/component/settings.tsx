@@ -3,7 +3,7 @@ import './settings.css';
 import AccountSettings from './setting-component/account-settings';
 import PaymentSettings from './setting-component/payment-settings';
 import CouponSettings from './setting-component/coupon-settings';
-import NotificationSettings from './setting-component/notification-settings';
+import RentHistory from './setting-component/rent-history';
 
 export default function Settings() {
   const [activeTab, setActiveTab] = useState('account');
@@ -40,10 +40,10 @@ export default function Settings() {
             Coupon
           </div>
           <div
-            className={`settings-menu-item ${activeTab === 'notification' ? 'active' : ''}`}
-            onClick={() => handleTabClick('notification')}
+            className={`settings-menu-item ${activeTab === 'renthistory' ? 'active' : ''}`}
+            onClick={() => handleTabClick('renthistory')}
           >
-            Notification
+            Rent History
           </div>
         </div>
 
@@ -62,8 +62,8 @@ export default function Settings() {
 
           </div>
 
-          <div className={`notification-settings ${activeTab === 'notification' ? 'show' : ''}`}>
-            <NotificationSettings />
+          <div className={`renhistory-settings ${activeTab === 'renthistory' ? 'show' : ''}`}>
+            <RentHistory />
           </div>
         </div>
       </div>

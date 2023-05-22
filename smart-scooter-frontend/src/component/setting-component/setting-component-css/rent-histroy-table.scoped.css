@@ -1,0 +1,94 @@
+.car-plate {
+  width: 150px;
+  height: 90px;
+  display: inline-block;
+  position: relative;
+  background-color: #539165;
+  border: 5px solid black;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.car-plate::before,
+.car-plate::after {
+  content: "";
+  position: absolute;
+  top: 15px;
+  width: 18px;
+  height: 7px;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.car-plate::before {
+  left: calc(50% - 55px);
+}
+
+.car-plate::after {
+  right: calc(50% - 55px);
+}
+
+
+.vehicle-type {
+  position: absolute;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: black;
+  padding: 5px 10px;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.plate-number {
+  position: absolute;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 25px;
+  color: black;
+  font-weight: bold;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  /* Prevent text from wrapping to a new line */
+  font-family: "Registration Plate", sans-serif;
+  /* Use a narrower font family */
+}
+
+.rent-history-table {
+  width: 100%;
+  /* Set the table width to 100% */
+  height: 100px;
+  /* Remove the spacing between table cells */
+  border-collapse: collapse;
+  /* Collapse the borders */
+}
+
+.rent-history-table td {
+  border: 5px solid black;
+  /* Add borders to all table cells */
+}
+
+.rent-history-table th {
+  text-align: left;
+  /* Align header text to the left */
+  font-weight: bold;
+}
+
+.rent-history-table td h2,
+.rent-history-table td h3,
+.rent-history-table td h5 {
+  margin: 0;
+  /* Remove any default margin */
+  line-height: normal;
+  /* Reset the line height */
+  white-space: nowrap;
+}
+
+.rent-history-table li {
+  list-style-type: none;
+  /* Remove the bullet point */
+}

@@ -5,8 +5,10 @@
 
 .settings-menu {
   width: 200px;
-  position: relative;
-  margin-top: 60px;
+  position: absolute;
+  top: 60px;
+  left: 40px;
+  bottom: 0;
 }
 
 .profile-pic {
@@ -24,7 +26,7 @@
 }
 
 .settings-menu-item {
-  padding: 10px;
+  padding: 15px;
   cursor: pointer;
   transition: background-color 0.4s;
 }
@@ -40,6 +42,7 @@
 .settings-content {
   flex: 1;
   padding: 20px;
+  margin-left: 240px; /* Adjust this value as needed */
 }
 
 .settings-content > div {
@@ -48,22 +51,4 @@
 
 .settings-content > div.show {
   display: block;
-}
-
-.notification-item {
-  border: 1px solid #ccc;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.notification-details {
-  margin-bottom: 10px;
-}
-
-.notification-details h3 {
-  margin: 0;
-}
-
-.notification-details p {
-  margin: 5px 0;
 }
