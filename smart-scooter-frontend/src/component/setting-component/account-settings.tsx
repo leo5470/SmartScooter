@@ -1,3 +1,4 @@
+// @ts-nocheck
 import Select from 'react-select';
 import { useState } from "react"
 
@@ -30,6 +31,7 @@ export default function AccountSettings() {
                                     type="text"
                                     id="firstname"
                                     name="firstname"
+                                    value={"Kevin"}
                                     placeholder="First name"
                                     required
                                 />
@@ -41,6 +43,7 @@ export default function AccountSettings() {
                                     type="text"
                                     id="lastname"
                                     name="lastname"
+                                    value={"Chou"}
                                     placeholder="Last name"
                                     required
                                 />
@@ -51,6 +54,7 @@ export default function AccountSettings() {
                             type="email"
                             id="email"
                             name="email"
+                            value={"NYCU.CSIE.STRONGEST@ntu.edu.tw"}
                             placeholder="Email address"
                             required
                         />
@@ -80,7 +84,8 @@ export default function AccountSettings() {
                                 type="text"
                                 id="street"
                                 name="street"
-                                placeholder="羅斯福路四段1號"
+                                value={"羅斯福路四段1號"}
+                                placeholder="your address"
                                 required
                             />
                         </label>
@@ -91,6 +96,7 @@ export default function AccountSettings() {
                                 type="text"
                                 id="lastname"
                                 name="lastname"
+                                value={"0987654321"}
                                 placeholder="Your number"
                                 required
                             />

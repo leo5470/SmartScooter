@@ -25,25 +25,25 @@ export default function Settings() {
             className={`settings-menu-item ${activeTab === 'account' ? 'active' : ''}`}
             onClick={() => handleTabClick('account')}
           >
-            Account Settings
+            <strong>Account</strong>
           </div>
           <div
             className={`settings-menu-item ${activeTab === 'payment' ? 'active' : ''}`}
             onClick={() => handleTabClick('payment')}
           >
-            Payment
+            <strong>Payment</strong>
           </div>
           <div
             className={`settings-menu-item ${activeTab === 'coupon' ? 'active' : ''}`}
             onClick={() => handleTabClick('coupon')}
           >
-            Coupon
+            <strong>Coupon</strong>
           </div>
           <div
             className={`settings-menu-item ${activeTab === 'renthistory' ? 'active' : ''}`}
             onClick={() => handleTabClick('renthistory')}
           >
-            Rent History
+            <strong>Rent History</strong>
           </div>
         </div>
 
