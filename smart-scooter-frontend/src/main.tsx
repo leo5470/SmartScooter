@@ -14,10 +14,13 @@ import ErrorPage from "./error-page";
 import User from "./routes/user"
 import Admin from "./routes/admin";
 
+import Search from "./routes/user/search";
+
 import Settings from "./component/settings";
 import Rent from "./component/rent";
-import Search from "./component/search";
 import Recharge from "./component/recharge";
+
+import "./asset/css/pico.min.css"
 
 const router = createBrowserRouter([
   {
