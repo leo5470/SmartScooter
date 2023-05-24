@@ -3,10 +3,10 @@ export default function Map() {
     const map_api_key = "AIzaSyDP1DwhMbUReJDEI9b0lgIFGKldf0pNM1I";
     const defaultProps = {
         center: {
-            lat: 10.99835602,
-            lng: 77.01502627
+            lat: 25.01754,
+            lng: 121.53970
         },
-        zoom: 11
+        zoom: 16
     };
     return (
         <>
