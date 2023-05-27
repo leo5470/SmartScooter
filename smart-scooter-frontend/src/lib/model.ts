@@ -1,4 +1,4 @@
-enum scooterStatus{
+export enum scooterStatus{
     "ready",
     "repairing",
     "malfunction",
