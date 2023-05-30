@@ -4,7 +4,7 @@ import {
     useJsApiLoader
 } from "@react-google-maps/api";
 
-import scooter_icon from "./img/scooter-electric.svg"
+import scooter_icon from "./img/new_scooter.png"
 
 import "./map.css"
 
@@ -66,6 +66,8 @@ export default function Map() {
                             <Marker
                                 position={{ lat: el.location.latitude, lng: el.location.longitude }}
                                 icon={scooter_icon}
+                                title="123"
+                                label="456"
                             >
                             </Marker>
                         </>)
