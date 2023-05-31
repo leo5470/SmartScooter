@@ -18,7 +18,7 @@ export default function UserNav() {
             </ul>
             <ul>
                 <li>
-                    <Link to="/user/settings">Settings</Link>
+                    <Link to="/admin/settings">Settings</Link>
                 </li>
                 <li>
                     <Link to="/logout">Logout</Link>

@@ -9,6 +9,7 @@ import "./main.css";
 
 import Home from "./routes/home";
 import Login from "./routes/login";
+import Signup from "./routes/signup";
 import ErrorPage from "./error-page";
 
 import User from "./routes/user"
@@ -28,7 +29,8 @@ const router = createBrowserRouter([
     element: <Home></Home>,
     errorElement: <ErrorPage></ErrorPage>,
     children: [
-      { path: "login", element: <Login></Login> }
+      { path: "login", element: <Login></Login> },
+      { path: "signup", element: <Signup></Signup> }
     ]
   },
   {
@@ -45,6 +47,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <Admin></Admin>,
+    children: [
+      { path: "settings", element: <Settings></Settings> }
+    ]
   },
   {
     path: "/error",

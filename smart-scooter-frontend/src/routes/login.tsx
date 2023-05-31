@@ -1,5 +1,9 @@
 import "./login.scoped.css"
+import { useState } from "react"
+import { login } from "../lib/utils";
 export default function Login() {
+    const [username, set_username] = useState("");
+    const [password, set_password] = useState("");
     return (
         <>
             <section>
@@ -9,10 +13,14 @@ export default function Login() {
                         <form>
                             <input
                                 type="text"
-                                name="login"
-                                placeholder="Login"
-                                aria-label="Login"
+                                name="username"
+                                placeholder="Username"
+                                aria-label="Username"
                                 required
+                                value={username}
+                                onChange={(event) => {
+                                    set_username(event.target.value)
+                                }}
                             />
                             <input
                                 type="password"
@@ -20,14 +28,12 @@ export default function Login() {
                                 placeholder="Password"
                                 aria-label="Password"
                                 required
+                                value={password}
+                                onChange={(event) => {
+                                    set_password(event.target.value)
+                                }}
                             />
-                            <fieldset>
-                                <label htmlFor="remember">
-                                    <input type="checkbox" role="switch" id="remember" name="remember" />
-                                    Remember me
-                                </label>
-                            </fieldset>
-                            <button type="submit" className="contrast" >Login</button>
+                            <button type="submit" className="contrast" onClick={() => login(username, password)} >Login</button>
                         </form>
                     </div>
                     <div></div>

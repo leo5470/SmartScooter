@@ -44,7 +44,7 @@ export default function Map() {
         }),
         []
     );
-    const onLoad = useCallback((map) => (mapRef.current = map), []);
+    const onLoad = useCallback((map: any) => (mapRef.current = map), []);
     const scooters: Array<Scooter> = []
     if (debug === true) {
         for (let i = 0; i < 10; i++) {
@@ -61,7 +61,7 @@ export default function Map() {
                     options={options}
                     onLoad={onLoad}
                 >
-                    {scooters.map((el, index) => {
+                    {scooters.map((el, _) => {
                         return (<>
                             <Marker
                                 position={{ lat: el.location.latitude, lng: el.location.longitude }}
