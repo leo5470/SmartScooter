@@ -33,7 +33,10 @@ export default function Login() {
                                     set_password(event.target.value)
                                 }}
                             />
-                            <button type="submit" className="contrast" onClick={() => login(username, password)} >Login</button>
+                            <button className="contrast" onClick={(event) => {
+                                event.preventDefault()
+                                login(username, password)
+                            }} >Login</button>
                         </form>
                     </div>
                     <div></div>
