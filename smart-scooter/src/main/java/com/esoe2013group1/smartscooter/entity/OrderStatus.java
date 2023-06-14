@@ -154,7 +154,7 @@ public class OrderStatus {
     }
 
     @SuppressWarnings("ReassignedVariable")
-    public int calcDistanceAndPrice(){
+    public int calcDistanceAndPrice(boolean coupon){
         int historyLen = latHistory.size();
         double totalDistance = 0;
         for(int i = 1; i < historyLen; i++){
@@ -164,9 +164,12 @@ public class OrderStatus {
             double afterLng = lngHistory.get(i);
             totalDistance += Location.calcDistanceForTwoPoints(prevLat, prevLng, afterLat, afterLng);
         }
-        int price = Math.toIntExact(Math.round(totalDistance * 2.5));
+        double priceDouble = totalDistance * 2.5; // $2.5 per kilometer
+        if(coupon){
+            priceDouble *= 0.9; // 10% off if user uses coupon
+        }
+        price = Math.toIntExact(Math.round(priceDouble));
         distance = totalDistance;
-        this.price = price;
         return price;
     }
 
