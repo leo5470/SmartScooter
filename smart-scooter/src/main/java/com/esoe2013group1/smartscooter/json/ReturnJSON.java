@@ -1,11 +1,17 @@
 package com.esoe2013group1.smartscooter.json;
 
-import com.esoe2013group1.smartscooter.UserData;
-
-public class UserDataJSON extends JSON{
+public class ReturnJSON extends JSON{
+    private Integer price;
     private boolean success;
     private String message;
-    private UserData userData;
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     public boolean isSuccess() {
         return success;
@@ -23,26 +29,15 @@ public class UserDataJSON extends JSON{
         this.message = message;
     }
 
-    public UserData getUserData() {
-        return userData;
-    }
-
-    public void setUserData(UserData userData) {
-        this.userData = userData;
-    }
-
-    public UserDataJSON(UserData userData){
-        this.userData = userData;
+    public ReturnJSON(Integer price){
+        this.price = price;
         success = true;
         message = "";
     }
 
-    public UserDataJSON(String message){
-        userData = null;
+    public ReturnJSON(String message){
+        price = null;
         success = false;
         this.message = message;
     }
-
-    public UserDataJSON(){}
-
 }

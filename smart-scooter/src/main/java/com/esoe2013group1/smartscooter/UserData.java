@@ -7,7 +7,7 @@ public class UserData {
     private Integer id;
     private String username;
     private Location location;
-    private Integer coupons;
+    private Integer coupons = 0;
 
     @JsonProperty("credit_card")
     private String creditCard;

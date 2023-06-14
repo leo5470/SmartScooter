@@ -2,9 +2,8 @@ package com.esoe2013group1.smartscooter;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ScooterID {
-
-    @JsonProperty("scooter_id")
+public class StationID {
+    @JsonProperty("station_id")
     private Integer id;
 
     public Integer getId() {

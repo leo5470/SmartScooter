@@ -84,6 +84,17 @@ public class Location {
         return geoCurve.getEllipsoidalDistance();
     }
 
+    public static double calcDistanceForTwoPoints(double fromLat, double fromLng, double destLat, double destLng){
+        GeodeticCalculator geoCalc = new GeodeticCalculator();
+        Ellipsoid ref = Ellipsoid.WGS84;
+
+        GlobalCoordinates fromCoordinate = new GlobalCoordinates(fromLat, fromLng);
+        GlobalCoordinates destCoordinate = new GlobalCoordinates(destLat, destLng);
+
+        GeodeticCurve geoCurve = geoCalc.calculateGeodeticCurve(ref, fromCoordinate, destCoordinate);
+        return geoCurve.getEllipsoidalDistance();
+    }
+
     public static Location getCoordinate(Location base, Direction direction, double distance){
         int degrees = direction.getDegrees();
 
@@ -98,6 +109,14 @@ public class Location {
 
         return result;
 
+    }
+
+    public static boolean checkInRange(Location base, Location comp){
+        return calcDistanceForTwoPoints(base, comp) <= 20;
+    }
+
+    public static boolean checkInRange(double baseLat, double baseLng, double compLat, double compLng){
+        return calcDistanceForTwoPoints(baseLat, baseLng , compLat, compLng) <= 20;
     }
 
 }

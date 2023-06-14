@@ -1,11 +1,13 @@
 package com.esoe2013group1.smartscooter.json;
 
-import com.esoe2013group1.smartscooter.UserData;
+import com.esoe2013group1.smartscooter.entity.OrderStatus;
+import jakarta.persistence.criteria.Order;
+import org.aspectj.weaver.ast.Or;
 
-public class UserDataJSON extends JSON{
+public class OrderJSON extends JSON{
     private boolean success;
     private String message;
-    private UserData userData;
+    private OrderStatus data;
 
     public boolean isSuccess() {
         return success;
@@ -23,26 +25,24 @@ public class UserDataJSON extends JSON{
         this.message = message;
     }
 
-    public UserData getUserData() {
-        return userData;
+    public OrderStatus getData() {
+        return data;
     }
 
-    public void setUserData(UserData userData) {
-        this.userData = userData;
+    public void setData(OrderStatus data) {
+        this.data = data;
     }
 
-    public UserDataJSON(UserData userData){
-        this.userData = userData;
+    public OrderJSON(OrderStatus orderStatus){
+        data = orderStatus;
         success = true;
         message = "";
     }
-
-    public UserDataJSON(String message){
-        userData = null;
+    public OrderJSON(String message){
+        data = null;
         success = false;
         this.message = message;
     }
 
-    public UserDataJSON(){}
-
+    public OrderJSON(){}
 }

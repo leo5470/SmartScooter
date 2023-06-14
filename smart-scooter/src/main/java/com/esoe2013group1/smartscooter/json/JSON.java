@@ -8,7 +8,7 @@ public class JSON {
             return mapper.writeValueAsString(this);
         } catch (Exception e) {
             System.out.println(e.getMessage());
-            return "translation to json for login failed.";
+            return "translation to json failed.";
         }
     }
 }

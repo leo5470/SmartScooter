@@ -5,11 +5,14 @@ import com.esoe2013group1.smartscooter.exception.*;
 import com.esoe2013group1.smartscooter.json.*;
 import com.esoe2013group1.smartscooter.repo.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @SpringBootApplication
@@ -21,23 +24,28 @@ public class SmartScooterApplication {
 	private final LoginStatusRepository loginStatusRepository;
 	private final UserRepository userRepository;
 	private final StationRepository stationRepository;
+	private final OrderStatusRepository orderStatusRepository;
 
 	// Jackson
-	private final ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper mapper = new ObjectMapper();
+
 
 	public SmartScooterApplication(CredentialRepository credentialRepository,
 								   ScooterRepository scooterRepository,
 								   LoginStatusRepository loginStatusRepository,
 								   UserRepository userRepository,
-								   StationRepository stationRepository) {
+								   StationRepository stationRepository,
+								   OrderStatusRepository orderStatusRepository) {
 		this.credentialRepository = credentialRepository;
 		this.scooterRepository = scooterRepository;
 		this.loginStatusRepository = loginStatusRepository;
 		this.userRepository = userRepository;
 		this.stationRepository = stationRepository;
+		this.orderStatusRepository = orderStatusRepository;
 	}
 
 	public static void main(String[] args) {
+		mapper.registerModule(new JavaTimeModule());
 		SpringApplication.run(SmartScooterApplication.class, args);
 	}
 
@@ -150,6 +158,18 @@ public class SmartScooterApplication {
 			}
 
 			User user = userRepository.findById(id).orElseThrow();
+			OrderStatus orderStatus = orderStatusRepository.findByUserIDAndActive(id, true);
+			if(orderStatus != null){
+				Location lastLocation = orderStatus.getLastLocation();
+				if(!lastLocation.equals(userData.getLocation())){
+					orderStatus.addLocation(userData.getLocation());
+					Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
+					scooter.setLat(userData.getLocation().getLat());
+					scooter.setLng(userData.getLocation().getLng());
+					orderStatusRepository.saveAndFlush(orderStatus);
+				}
+
+			}
 
 			user.copyFromData(userData);
 
@@ -268,6 +288,158 @@ public class SmartScooterApplication {
 			return listJSON.makeJson(mapper);
 		}
 	}
+	@PostMapping("/api/user/rent")
+	public String rent(@RequestHeader("token") String token, @RequestBody ScooterID scooterIDObj){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+
+			int userId = loginStatus.getId();
+			User user = userRepository.findById(userId).orElseThrow();
+
+			if(orderStatusRepository.existsByUserIDAndActive(userId, true)){
+				throw new ActiveOrderException();
+			}
+
+			int scooterID = scooterIDObj.getId();
+			Scooter scooter = scooterRepository.findById(scooterID).orElseThrow();
+			if(!Location.checkInRange(user.getLat(), user.getLng(), scooter.getLat(), scooter.getLng())){
+				throw new OutOfReachException(scooter);
+			}
+
+			if(!(scooter.getStatus().equals("ready"))){
+				throw new ScooterUnavailableException(scooter.getStatus());
+			}
+			scooter.setStatus("rented");
+
+			LocalDateTime rentTime = LocalDateTime.now();
+			Location location = new Location(user.getLat(), user.getLng());
+
+			OrderStatus orderStatus = new OrderStatus(userId, scooterID, location, rentTime);
+			orderStatusRepository.saveAndFlush(orderStatus);
+
+			scooterRepository.saveAndFlush(scooter);
+
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
+	}
+
+	// Passed
+	@GetMapping("/api/user/active-order")
+	public String activeOrder(@RequestHeader("token") String token){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+			int userId = loginStatus.getId();
+			OrderStatus orderStatus = orderStatusRepository.findByUserIDAndActive(userId, true);
+			if(orderStatus == null){
+				throw new NoActiveOrderException();
+			}
+			OrderJSON orderJSON = new OrderJSON(orderStatus);
+			return orderJSON.makeJson(mapper);
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			OrderJSON orderJSON = new OrderJSON(e.getMessage());
+			return orderJSON.makeJson(mapper);
+		}
+	}
+
+	// TODO: Test
+	@GetMapping("/api/user/past-order")
+	public String pastOrder(@RequestHeader("token") String token, @RequestBody PastOrderData pastOrderData){
+		try {
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+			int userId = loginStatus.getId();
+			List<OrderStatus> allOrderStatusList = orderStatusRepository.findAllByUserIDAndActive(userId, false);
+			List<OrderStatus> requestedList = allOrderStatusList.subList(pastOrderData.getOffset(), pastOrderData.getLimit());
+			ListJSON<OrderStatus> listJSON = new ListJSON<>(requestedList);
+			return listJSON.makeJson(mapper);
+		} catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			ListJSON<Object> listJSON = new ListJSON<>(e.getMessage());
+			return listJSON.makeJson(mapper);
+		}
+	}
+
+	//TODO: Test
+	@PostMapping("/api/user/recharge")
+	public String userRecharge(@RequestHeader("token") String token, @RequestBody StationID stationID){
+		try {
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+			int userId = loginStatus.getId();
+
+			OrderStatus orderStatus = orderStatusRepository.findByUserIDAndActive(userId, true);
+			if(orderStatus == null){
+				throw new NoActiveOrderException();
+			}
+
+			Station station = stationRepository.findById(stationID.getId()).orElseThrow();
+
+			User user = userRepository.findById(userId).orElseThrow();
+			if(!Location.checkInRange(user.getLat(), user.getLng(), station.getLat(), station.getLng())){
+				throw new OutOfReachException(station);
+			}
+			user.addCoupon();
+
+			int scooterId = orderStatus.getScooterID();
+			Scooter scooter = scooterRepository.findById(scooterId).orElseThrow();
+			scooter.setBattery_level(100);
+			scooterRepository.saveAndFlush(scooter);
+			userRepository.saveAndFlush(user);
+
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
+	}
+
+	// TODO: Not yet tested
+	@PostMapping("/api/user/return")
+	public String returnScooter(@RequestHeader("token") String token, @RequestBody ReturnData returnData){
+		try {
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+			int userId = loginStatus.getId();
+			OrderStatus orderStatus = orderStatusRepository.findByUserIDAndActive(userId, true);
+			if(orderStatus == null){
+				throw new NoActiveOrderException();
+			}
+
+			LocalDateTime returnTime = LocalDateTime.now();
+			orderStatus.setReturnTime(returnTime);
+
+			orderStatus.calcTotalTime();
+
+			int price = orderStatus.calcDistanceAndPrice();
+
+			ReturnJSON returnJSON = new ReturnJSON(price);
+			return returnJSON.makeJson(mapper);
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			ReturnJSON returnJSON = new ReturnJSON(e.getMessage());
+			return returnJSON.makeJson(mapper);
+		}
+	}
 
 	@PostMapping("/api/admin/repair")
 	public String adminRepair(@RequestHeader("token") String token, @RequestBody ScooterID scooterID){
@@ -282,7 +454,7 @@ public class SmartScooterApplication {
 				throw new OperationException(status);
 			}
 			scooter.setStatus("ready");
-			// scooter.setBattery_level(100);
+			scooter.setBattery_level(100);
 
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
 			return generalJSON.makeJson(mapper);
@@ -293,5 +465,4 @@ public class SmartScooterApplication {
 			return generalJSON.makeJson(mapper);
 		}
 	}
-
 }
