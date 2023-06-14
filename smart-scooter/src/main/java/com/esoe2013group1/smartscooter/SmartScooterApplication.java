@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @SpringBootApplication
@@ -163,9 +162,14 @@ public class SmartScooterApplication {
 				Location lastLocation = orderStatus.getLastLocation();
 				if(!lastLocation.equals(userData.getLocation())){
 					orderStatus.addLocation(userData.getLocation());
+					orderStatus.calcDistance();
 					Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
+					if(orderStatus.batteryDrop()){
+						scooter.dropBatteryLevel();
+					}
 					scooter.setLat(userData.getLocation().getLat());
 					scooter.setLng(userData.getLocation().getLng());
+
 					orderStatusRepository.saveAndFlush(orderStatus);
 				}
 
@@ -355,7 +359,7 @@ public class SmartScooterApplication {
 
 	// TODO: Test
 	@GetMapping("/api/user/past-order")
-	public String pastOrder(@RequestHeader("token") String token, @RequestBody PastOrderData pastOrderData){
+	public String pastOrder(@RequestHeader("token") String token, @RequestParam int limit, @RequestParam int offset){
 		try {
 			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
 			if(loginStatus == null){
@@ -363,7 +367,8 @@ public class SmartScooterApplication {
 			}
 			int userId = loginStatus.getId();
 			List<OrderStatus> allOrderStatusList = orderStatusRepository.findAllByUserIDAndActive(userId, false);
-			List<OrderStatus> requestedList = allOrderStatusList.subList(pastOrderData.getOffset(), pastOrderData.getLimit());
+			List<OrderStatus> requestedList = allOrderStatusList.subList(offset, limit > allOrderStatusList.size() ?
+					allOrderStatusList.size() : limit);
 			ListJSON<OrderStatus> listJSON = new ListJSON<>(requestedList);
 			return listJSON.makeJson(mapper);
 		} catch (Exception e){
@@ -430,7 +435,23 @@ public class SmartScooterApplication {
 
 			orderStatus.calcTotalTime();
 
-			int price = orderStatus.calcDistanceAndPrice(returnData.isUseCoupon());
+			int price = orderStatus.settle(returnData.isUseCoupon());
+
+			if(returnData.isUseCoupon()){
+				User user = userRepository.findById(userId).orElseThrow();
+				if(user.getCoupons() < 1){
+					throw new CouponNotAvailableException();
+				}
+				user.useCoupon();
+				userRepository.saveAndFlush(user);
+			}
+
+			Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
+			scooter.setStatus("ready");
+			scooterRepository.saveAndFlush(scooter);
+
+			orderStatus.setActive(false);
+			orderStatusRepository.saveAndFlush(orderStatus);
 
 			ReturnJSON returnJSON = new ReturnJSON(price);
 			return returnJSON.makeJson(mapper);

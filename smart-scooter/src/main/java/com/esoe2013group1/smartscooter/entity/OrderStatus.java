@@ -40,7 +40,7 @@ public class OrderStatus {
     private List<Double> lngHistory;
 
     @JsonProperty("total_distance")
-    private Double distance;
+    private Double distance = 0.0;
 
     private Integer price;
 
@@ -154,23 +154,27 @@ public class OrderStatus {
     }
 
     @SuppressWarnings("ReassignedVariable")
-    public int calcDistanceAndPrice(boolean coupon){
-        int historyLen = latHistory.size();
-        double totalDistance = 0;
-        for(int i = 1; i < historyLen; i++){
-            double prevLat = latHistory.get(i - 1);
-            double prevLng = lngHistory.get(i - 1);
-            double afterLat = latHistory.get(i);
-            double afterLng = lngHistory.get(i);
-            totalDistance += Location.calcDistanceForTwoPoints(prevLat, prevLng, afterLat, afterLng);
-        }
-        double priceDouble = totalDistance * 2.5; // $2.5 per kilometer
+    public int settle(boolean coupon){
+        double priceDouble = 25 + distance * 2.5; // $25 basic fee + $2.5 per kilometer
         if(coupon){
             priceDouble *= 0.9; // 10% off if user uses coupon
         }
         price = Math.toIntExact(Math.round(priceDouble));
-        distance = totalDistance;
         return price;
+    }
+
+    public boolean batteryDrop(){
+        return Math.rint(distance) == distance;
+    }
+
+    public void calcDistance() {
+        int historyLen = latHistory.size();
+        double prevLat = latHistory.get(historyLen - 2);
+        double prevLng = lngHistory.get(historyLen - 2);
+        double afterLat = latHistory.get(historyLen - 1);
+        double afterLng = lngHistory.get(historyLen - 1);
+
+        distance += Location.calcDistanceForTwoPoints(prevLat, prevLng, afterLat, afterLng);
     }
 
     public void addLocation(Location location){
