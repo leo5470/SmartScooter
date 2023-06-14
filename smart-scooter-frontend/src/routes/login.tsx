@@ -4,6 +4,7 @@ import { login } from "../lib/utils";
 export default function Login() {
     const [username, set_username] = useState("");
     const [password, set_password] = useState("");
+    const [error_message , set_error_message] = useState("");
     return (
         <>
             <section>
@@ -33,11 +34,18 @@ export default function Login() {
                                     set_password(event.target.value)
                                 }}
                             />
-                            <button className="contrast" onClick={(event) => {
+                            <button className="contrast" onClick={async (event) => {
                                 event.preventDefault()
-                                login(username, password)
+                                try{
+                                    await login(username, password)
+                                    set_error_message("")
+                                }
+                                catch(e){
+                                    set_error_message(e as string)
+                                }
                             }} >Login</button>
                         </form>
+                        <p>{error_message}</p>
                     </div>
                     <div></div>
                 </article>

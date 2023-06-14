@@ -22,6 +22,7 @@ import Rent from "./component/rent";
 import Recharge from "./component/recharge";
 
 import "./asset/css/pico.min.css"
+import Logout from "./routes/logout";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,8 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage></ErrorPage>,
     children: [
       { path: "login", element: <Login></Login> },
-      { path: "signup", element: <Signup></Signup> }
+      { path: "signup", element: <Signup></Signup> },
+      { path: "logout",element:<Logout></Logout> },
     ]
   },
   {
