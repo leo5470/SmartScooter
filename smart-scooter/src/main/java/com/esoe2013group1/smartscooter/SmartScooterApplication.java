@@ -430,7 +430,7 @@ public class SmartScooterApplication {
 
 			orderStatus.calcTotalTime();
 
-			int price = orderStatus.calcDistanceAndPrice();
+			int price = orderStatus.calcDistanceAndPrice(returnData.isUseCoupon());
 
 			ReturnJSON returnJSON = new ReturnJSON(price);
 			return returnJSON.makeJson(mapper);
