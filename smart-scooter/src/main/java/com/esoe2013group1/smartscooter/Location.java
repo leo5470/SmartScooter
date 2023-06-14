@@ -81,7 +81,7 @@ public class Location {
         GlobalCoordinates destCoordinate = new GlobalCoordinates(dest.getLat(), dest.getLng());
 
         GeodeticCurve geoCurve = geoCalc.calculateGeodeticCurve(ref, fromCoordinate, destCoordinate);
-        return geoCurve.getEllipsoidalDistance();
+        return geoCurve.getEllipsoidalDistance() / 1000;
     }
 
     public static double calcDistanceForTwoPoints(double fromLat, double fromLng, double destLat, double destLng){
@@ -92,7 +92,7 @@ public class Location {
         GlobalCoordinates destCoordinate = new GlobalCoordinates(destLat, destLng);
 
         GeodeticCurve geoCurve = geoCalc.calculateGeodeticCurve(ref, fromCoordinate, destCoordinate);
-        return geoCurve.getEllipsoidalDistance();
+        return geoCurve.getEllipsoidalDistance() / 1000;
     }
 
     public static Location getCoordinate(Location base, Direction direction, double distance){
