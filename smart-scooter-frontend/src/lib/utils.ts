@@ -1,5 +1,5 @@
 import { config } from "./config";
-import { User } from "./model";
+import { Scooter, User } from "./model";
 
 import { proxt_data, anonymous_user } from "./store";
 
@@ -66,5 +66,16 @@ export const signup = async (username: string, email: string, password: string) 
     const signup_data = await fetch_data<null>("/signup", "POST", { username, email, password });
     if (signup_data.success === true) {
         login(username, password);
+    }
+}
+
+export const get_scooters = async(range:number = 10)=>{
+    const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter" , "GET" , {range});
+    console.log(scooters_data)
+    if (scooters_data.success === true && scooters_data.data != null && scooters_data.data!= undefined){
+        return scooters_data.data;
+    }
+    else{
+        return [];
     }
 }
