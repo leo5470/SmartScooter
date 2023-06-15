@@ -4,6 +4,7 @@ import com.esoe2013group1.smartscooter.entity.*;
 import com.esoe2013group1.smartscooter.exception.*;
 import com.esoe2013group1.smartscooter.json.*;
 import com.esoe2013group1.smartscooter.repo.*;
+import com.esoe2013group1.smartscooter.requestbodydata.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,11 +1,9 @@
 package com.esoe2013group1.smartscooter.entity;
 
-import com.esoe2013group1.smartscooter.UserData;
+import com.esoe2013group1.smartscooter.requestbodydata.UserData;
 import com.esoe2013group1.smartscooter.exception.DifferentIdentifierException;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
-import org.springframework.lang.NonNull;
 
 @Entity(name = "UserInfo")
 public class User {
