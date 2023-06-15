@@ -1,1 +1,1 @@
-google-chrome --disable-web-security --user-data-dir="/tmp/chrome-data
+google-chrome --disable-web-security --user-data-dir="/tmp/chrome-data"

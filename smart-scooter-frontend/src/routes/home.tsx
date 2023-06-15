@@ -1,12 +1,18 @@
 import AnonymousNav from "../component/anonymous-nav";
-import { useOutlet } from "react-router-dom";
+import { useOutlet , Navigate } from "react-router-dom";
 
 import Showcase from "../component/showcase";
 
+import { useAtom } from "jotai";
+
+import { atom_data } from "../lib/store";
+
 export default function Home() {
     const outlet = useOutlet();
+    const [data , ] = useAtom(atom_data);
     return (
         <>
+            {data.current_user.id != -1? data.current_user.is_admin === true?<Navigate to="/admin"/>: <Navigate to="/user"/>:""}
             <AnonymousNav></AnonymousNav>
             <main className="container">
                 {outlet || <HomeContent></HomeContent>}
