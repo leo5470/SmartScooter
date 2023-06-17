@@ -16,12 +16,12 @@ import MapControl from "./MapControl";
 
 import "./map.css"
 
-import { get_scooters } from "../lib/utils";
+import { change_user_location, get_scooters, get_stations } from "../lib/utils";
 
-import { Scooter, Location, scooterStatus } from '../lib/model';
+import { Scooter, Location, scooterStatus, User, Station } from '../lib/model';
 
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
-import {useAtom } from "jotai";
+import { useAtom } from "jotai";
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
@@ -29,21 +29,23 @@ type MapOptions = google.maps.MapOptions;
 const debug = true
 
 export default function Map() {
-    const [data, _] = useAtom(atom_data);
+    const [data, set_data] = useAtom(atom_data);
     const map_api_key = import.meta.env.VITE_GOOGLE_MAP_API === undefined ? "" : import.meta.env.VITE_GOOGLE_MAP_API
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: map_api_key
     })
-    const [scooters , set_scooters] = useState<Array<Scooter>>([]);
-    useEffect(()=>{
-        const fetch = async()=>{
-            await (async ()=>{
-                set_scooters(await get_scooters())
-            })
+    const [scooters, set_scooters] = useState<Array<Scooter>>([]);
+    const [stations, set_stations] = useState<Array<Station>>([]);
+    useEffect(() => {
+        const update_scooters = async () => {
+            set_scooters(await get_scooters())
         }
-        fetch()
-    }) 
+        const update_stations = async ()=>{
+            set_stations(await get_stations())
+        }
+        Promise.all([update_scooters() , update_stations()]).then(()=>console.log(scooters , stations))
+    }, [data])
     const mapRef = useRef<GoogleMap>();
     const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
     const options = useMemo<MapOptions>(
@@ -54,34 +56,82 @@ export default function Map() {
         }),
         []
     );
-    const onLoad = useCallback((map: any) => {(mapRef.current = map)}, []);
+    const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     return isLoaded ? (
         <>
-        <div className="map-container">
-            <div className="map" >
-                <GoogleMap
-                    zoom={15}
-                    center={center}
-                    mapContainerClassName="map-container"
-                    options={options}
-                    onLoad={onLoad}
-                >
-                    <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon}>
-                    </Marker>
-                    <MapControl position="TOP_CENTER">
-                        <button
-                            onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
-                            style={{ "margin": 10  , opacity:"0.7"}}
-                            className=""
-                        >
-                            Recenter
-                        </button>
-                    </MapControl>
-                    { scooters === undefined? <></>: scooters?.map((element , _index)=>{
-                            return (<Marker icon={scooter_icon} position={{lat:element.location.latitude , lng:element.location.longitude}}></Marker>)
+            <div className="map-container">
+                <div className="map" >
+                    <GoogleMap
+                        zoom={15}
+                        center={center}
+                        mapContainerClassName="map-container"
+                        options={options}
+                        onLoad={onLoad}
+                    >
+                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={user_icon}>
+                        </Marker>
+                        <MapControl position="TOP_LEFT">
+                            <button
+                                onClick={() => set_center({ lat: data.current_location.lat, lng: data.current_location.lng })}
+                                style={{ "margin": 10, opacity: "0.7" }}
+                                className=""
+                            >
+                                Recenter
+                            </button>
+                        </MapControl>
+                        <MapControl position="LEFT_CENTER">
+                            <button
+                                onClick={() => {
+                                    const new_location = new Location(data.current_location.lat , data.current_location.lng-0.0001) 
+                                    change_user_location(new_location)
+                                }}
+                                style={{ "margin": 10, opacity: "0.7" }}
+                                className="secondary"
+                            >
+                                LEFT
+                            </button>
+                        </MapControl>
+                        <MapControl position="RIGHT_CENTER">
+                            <button
+                                onClick={() => {
+                                    const new_location = new Location(data.current_location.lat , data.current_location.lng+0.0001) 
+                                    change_user_location(new_location)
+                                }}
+                                style={{ "margin": 10, opacity: "0.7" }}
+                                className="secondary"
+                            >
+                                RIGHT
+                            </button>
+                        </MapControl>
+                        <MapControl position="TOP_CENTER">
+                            <button
+                                onClick={() => {
+                                    const new_location = new Location(data.current_location.lat+0.0001 , data.current_location.lng) 
+                                    change_user_location(new_location)
+                                }}
+                                style={{ "margin": 10, opacity: "0.7" }}
+                                className="secondary"
+                            >
+                                UP
+                            </button>
+                        </MapControl>
+                        <MapControl position="BOTTOM_CENTER">
+                            <button
+                                onClick={() => {
+                                    const new_location = new Location(data.current_location.lat-0.0001 , data.current_location.lng) 
+                                    change_user_location(new_location)
+                                }}
+                                style={{ "margin": 10, opacity: "0.7" }}
+                                className="secondary"
+                            >
+                                DOWN
+                            </button>
+                        </MapControl>
+                        {scooters === undefined ? <></> : scooters?.map((element, _index) => {
+                            return (<Marker icon={scooter_icon} position={{ lat: element.location.lat, lng: element.location.lng }}></Marker>)
                         })}
-                </GoogleMap>
-            </div >
+                    </GoogleMap>
+                </div >
             </div>
         </>
     ) : <></>
