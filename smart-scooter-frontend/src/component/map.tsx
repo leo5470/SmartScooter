@@ -57,30 +57,6 @@ export default function Map() {
     const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     return isLoaded ? (
         <>
-        <div className="map-container">
-            <div className="map" >
-                <GoogleMap
-                    zoom={15}
-                    center={center}
-                    mapContainerClassName="map-container"
-                    options={options}
-                    onLoad={onLoad}
-                >
-                    <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon}>                    </Marker>
-                    <MapControl position="TOP_CENTER">
-                        <button
-                            onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
-                            style={{ "margin": 10  , opacity:"0.7"}}
-                            className=""
-                        >
-                            Recenter
-                        </button>
-                    </MapControl>
-                    { scooters === undefined? <></>: scooters?.map((element , _index)=>{
-                            return (<Marker icon={scooter_icon} position={{lat:element.location.latitude , lng:element.location.longitude}}></Marker>)
-                        })}
-                </GoogleMap>
-            </div >
             <div className="map-container">
                 <div className="map" >
                     <GoogleMap
@@ -90,7 +66,7 @@ export default function Map() {
                         options={options}
                         onLoad={onLoad}
                     >
-                        <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon} />
+                        <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon}>                    </Marker>
                         <MapControl position="TOP_CENTER">
                             <button
                                 onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
@@ -100,16 +76,41 @@ export default function Map() {
                                 Recenter
                             </button>
                         </MapControl>
-                        {scooters && scooters.map((element, index) => (
-                            <Marker
-                                key={index}
-                                icon={scooter_icon}
-                                position={{ lat: element.location.latitude, lng: element.location.longitude }}
-                            />
-                        ))}
+                        {scooters === undefined ? <></> : scooters?.map((element, _index) => {
+                            return (<Marker icon={scooter_icon} position={{ lat: element.location.latitude, lng: element.location.longitude }}></Marker>)
+                        })}
                     </GoogleMap>
                 </div >
-            </div>
-        </>
-    ) : <></>
+                <div className="map-container">
+                    <div className="map" >
+                        <GoogleMap
+                            zoom={15}
+                            center={center}
+                            mapContainerClassName="map-container"
+                            options={options}
+                            onLoad={onLoad}
+                        >
+                            <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon} />
+                            <MapControl position="TOP_CENTER">
+                                <button
+                                    onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
+                                    style={{ "margin": 10, opacity: "0.7" }}
+                                    className=""
+                                >
+                                    Recenter
+                                </button>
+                            </MapControl>
+                            {scooters && scooters.map((element, index) => (
+                                <Marker
+                                    key={index}
+                                    icon={scooter_icon}
+                                    position={{ lat: element.location.latitude, lng: element.location.longitude }}
+                                />
+                            ))}
+                        </GoogleMap>
+                    </div >
+                </div>
+                </div>
+            </>)
+            : (<></>)
 }

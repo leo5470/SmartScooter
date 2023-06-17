@@ -18,11 +18,11 @@ export const check_api = async () => {
     }
 }
 
-export const fetch_data = async <T>(url: string, method: string, args: object) => {
-    const fetcher = fetch(config.api_url + url, {
+export const fetch_data = async <T>(url: string, method: string, body_args: object = {} , params_args:Object = {}) => {
+    const fetcher = fetch(config.api_url + url + new URLSearchParams(...<[]>params_args), {
         method: method,
         headers: {"token": proxt_data.current_session, "Content-Type": "application/json" },
-        body: Object.keys(args).length === 0 ? undefined : JSON.stringify(args),
+        body: Object.keys(body_args).length === 0 ? undefined : JSON.stringify(body_args),
     });
     const response = await fetcher;
     const data = await response.json() as Iresponse<T>;
@@ -70,7 +70,7 @@ export const signup = async (username: string, email: string, password: string) 
 }
 
 export const get_scooters = async(range:number = 10)=>{
-    const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter" , "GET" , {range});
+    const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter" , "GET" ,{} ,{"range":range});
     console.log(scooters_data)
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data!= undefined){
         return scooters_data.data;
