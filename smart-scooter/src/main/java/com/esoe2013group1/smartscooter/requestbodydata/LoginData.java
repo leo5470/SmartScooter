@@ -1,4 +1,4 @@
-package com.esoe2013group1.smartscooter.data;
+package com.esoe2013group1.smartscooter.requestbodydata;
 
 public class LoginData {
     String username;

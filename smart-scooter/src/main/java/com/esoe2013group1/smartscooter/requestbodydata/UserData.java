@@ -1,4 +1,4 @@
-package com.esoe2013group1.smartscooter.data;
+package com.esoe2013group1.smartscooter.requestbodydata;
 
 import com.esoe2013group1.smartscooter.Location;
 import com.esoe2013group1.smartscooter.entity.User;

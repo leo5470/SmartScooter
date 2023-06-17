@@ -4,17 +4,15 @@ import com.esoe2013group1.smartscooter.entity.*;
 import com.esoe2013group1.smartscooter.exception.*;
 import com.esoe2013group1.smartscooter.json.*;
 import com.esoe2013group1.smartscooter.repo.*;
-import com.esoe2013group1.smartscooter.data.*;
+import com.esoe2013group1.smartscooter.requestbodydata.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -249,12 +247,7 @@ public class SmartScooterApplication {
 												(minLat, maxLat, minLng, maxLng, "ready");
 			}
 
-			List<ScooterData> scooterDataList = new ArrayList<>();
-			for(Scooter scooter : scooterList){
-				boolean add = scooterDataList.add(new ScooterData(scooter)); // always return true
-			}
-
-			ListJSON<ScooterData> listJSON = new ListJSON<>(scooterDataList);
+			ListJSON<Scooter> listJSON = new ListJSON<>(scooterList);
 
 			return listJSON.makeJson(mapper);
 
@@ -290,13 +283,7 @@ public class SmartScooterApplication {
 			List<Station> stationList;
 			stationList = stationRepository.findAllByLatBetweenAndLngBetween(minLat, maxLat, minLng, maxLng);
 
-			List<StationData> stationDataList = new ArrayList<>();
-			for(Station station : stationList){
-				boolean add = stationDataList.add(new StationData(station)); // always return true
-			}
-
-
-			ListJSON<StationData> listJSON = new ListJSON<>(stationDataList);
+			ListJSON<Station> listJSON = new ListJSON<>(stationList);
 
 			return listJSON.makeJson(mapper);
 
@@ -499,25 +486,5 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
 		}
-	}
-
-	@PreDestroy
-	private void destroy(){
-		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
-		for(LoginStatus loginStatus : loginStatusList){
-			loginStatus.setLogin(false);
-			loginStatus.setTok(null);
-			loginStatusRepository.saveAndFlush(loginStatus);
-		}
-		System.out.println("All loginStatus cleaned up.");
-
-		List<Scooter> scooterList = scooterRepository.findAll();
-		for(Scooter scooter : scooterList){
-			if(scooter.getStatus().equals("rented")){
-				scooter.setStatus("ready"); // or malfunction
-				scooterRepository.saveAndFlush(scooter);
-			}
-		}
-		System.out.println("All scooter cleaned up");
 	}
 }
