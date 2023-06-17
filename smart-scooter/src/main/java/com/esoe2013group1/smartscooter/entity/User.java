@@ -1,6 +1,6 @@
 package com.esoe2013group1.smartscooter.entity;
 
-import com.esoe2013group1.smartscooter.requestbodydata.UserData;
+import com.esoe2013group1.smartscooter.data.UserData;
 import com.esoe2013group1.smartscooter.exception.DifferentIdentifierException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;

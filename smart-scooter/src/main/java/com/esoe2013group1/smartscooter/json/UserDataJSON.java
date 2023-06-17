@@ -1,6 +1,6 @@
 package com.esoe2013group1.smartscooter.json;
 
-import com.esoe2013group1.smartscooter.requestbodydata.UserData;
+import com.esoe2013group1.smartscooter.data.UserData;
 
 public class UserDataJSON extends JSON{
     private boolean success;
