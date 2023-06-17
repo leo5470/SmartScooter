@@ -21,7 +21,7 @@ import { get_scooters } from "../lib/utils";
 import { Scooter, Location, scooterStatus } from '../lib/model';
 
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
-import {useAtom } from "jotai";
+import { useAtom } from "jotai";
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
@@ -35,17 +35,17 @@ export default function Map() {
         id: 'google-map-script',
         googleMapsApiKey: map_api_key
     })
-    const [scooters , set_scooters] = useState<Array<Scooter>>([]);
-    useEffect(()=>{
-        const fetch = async()=>{
-            await (async ()=>{
+    const [scooters, set_scooters] = useState<Array<Scooter>>([]);
+    useEffect(() => {
+        const fetch = async () => {
+            await (async () => {
                 set_scooters(await get_scooters())
-            })
+            })()
         }
         fetch()
-    }) 
+    }, [])
     const mapRef = useRef<GoogleMap>();
-    const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
+    const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01775, lng: 121.53971 })
     const options = useMemo<MapOptions>(
         () => ({
             mapId: "b181cac70f27f5e6",
@@ -54,34 +54,37 @@ export default function Map() {
         }),
         []
     );
-    const onLoad = useCallback((map: any) => {(mapRef.current = map)}, []);
+    const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     return isLoaded ? (
         <>
-        <div className="map-container">
-            <div className="map" >
-                <GoogleMap
-                    zoom={15}
-                    center={center}
-                    mapContainerClassName="map-container"
-                    options={options}
-                    onLoad={onLoad}
-                >
-                    <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon}>
-                    </Marker>
-                    <MapControl position="TOP_CENTER">
-                        <button
-                            onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
-                            style={{ "margin": 10  , opacity:"0.7"}}
-                            className=""
-                        >
-                            Recenter
-                        </button>
-                    </MapControl>
-                    { scooters === undefined? <></>: scooters?.map((element , _index)=>{
-                            return (<Marker icon={scooter_icon} position={{lat:element.location.latitude , lng:element.location.longitude}}></Marker>)
-                        })}
-                </GoogleMap>
-            </div >
+            <div className="map-container">
+                <div className="map" >
+                    <GoogleMap
+                        zoom={15}
+                        center={center}
+                        mapContainerClassName="map-container"
+                        options={options}
+                        onLoad={onLoad}
+                    >
+                        <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon} />
+                        <MapControl position="TOP_CENTER">
+                            <button
+                                onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
+                                style={{ "margin": 10, opacity: "0.7" }}
+                                className=""
+                            >
+                                Recenter
+                            </button>
+                        </MapControl>
+                        {scooters && scooters.map((element, index) => (
+                            <Marker
+                                key={index}
+                                icon={scooter_icon}
+                                position={{ lat: element.location.latitude, lng: element.location.longitude }}
+                            />
+                        ))}
+                    </GoogleMap>
+                </div >
             </div>
         </>
     ) : <></>
