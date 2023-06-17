@@ -1,4 +1,4 @@
-package com.esoe2013group1.smartscooter.requestbodydata;
+package com.esoe2013group1.smartscooter.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
