@@ -66,8 +66,7 @@ export default function Map() {
                     options={options}
                     onLoad={onLoad}
                 >
-                    <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon}>
-                    </Marker>
+                    <Marker position={{ lat: data.current_location.latitude, lng: data.current_location.longitude }} icon={user_icon}>                    </Marker>
                     <MapControl position="TOP_CENTER">
                         <button
                             onClick={() => set_center({ lat: data.current_location.latitude, lng: data.current_location.longitude })}
