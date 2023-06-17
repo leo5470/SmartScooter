@@ -4,7 +4,7 @@ import com.esoe2013group1.smartscooter.entity.*;
 import com.esoe2013group1.smartscooter.exception.*;
 import com.esoe2013group1.smartscooter.json.*;
 import com.esoe2013group1.smartscooter.repo.*;
-import com.esoe2013group1.smartscooter.requestbodydata.*;
+import com.esoe2013group1.smartscooter.data.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.annotation.PreDestroy;
@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -248,7 +249,12 @@ public class SmartScooterApplication {
 												(minLat, maxLat, minLng, maxLng, "ready");
 			}
 
-			ListJSON<Scooter> listJSON = new ListJSON<>(scooterList);
+			List<ScooterData> scooterDataList = new ArrayList<>();
+			for(Scooter scooter : scooterList){
+				boolean add = scooterDataList.add(new ScooterData(scooter)); // always return true
+			}
+
+			ListJSON<ScooterData> listJSON = new ListJSON<>(scooterDataList);
 
 			return listJSON.makeJson(mapper);
 
@@ -284,7 +290,13 @@ public class SmartScooterApplication {
 			List<Station> stationList;
 			stationList = stationRepository.findAllByLatBetweenAndLngBetween(minLat, maxLat, minLng, maxLng);
 
-			ListJSON<Station> listJSON = new ListJSON<>(stationList);
+			List<StationData> stationDataList = new ArrayList<>();
+			for(Station station : stationList){
+				boolean add = stationDataList.add(new StationData(station)); // always return true
+			}
+
+
+			ListJSON<StationData> listJSON = new ListJSON<>(stationDataList);
 
 			return listJSON.makeJson(mapper);
 
@@ -506,6 +518,6 @@ public class SmartScooterApplication {
 				scooterRepository.saveAndFlush(scooter);
 			}
 		}
-		System.out.println("All Scooter cleaned up");
+		System.out.println("All scooter cleaned up");
 	}
 }
