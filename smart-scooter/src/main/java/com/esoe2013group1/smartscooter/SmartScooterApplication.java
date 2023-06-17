@@ -7,6 +7,7 @@ import com.esoe2013group1.smartscooter.repo.*;
 import com.esoe2013group1.smartscooter.requestbodydata.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -486,5 +487,25 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
 		}
+	}
+
+	@PreDestroy
+	private void destroy(){
+		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
+		for(LoginStatus loginStatus : loginStatusList){
+			loginStatus.setLogin(false);
+			loginStatus.setTok(null);
+			loginStatusRepository.saveAndFlush(loginStatus);
+		}
+		System.out.println("All loginStatus cleaned up.");
+
+		List<Scooter> scooterList = scooterRepository.findAll();
+		for(Scooter scooter : scooterList){
+			if(scooter.getStatus().equals("rented")){
+				scooter.setStatus("ready"); // or malfunction
+				scooterRepository.saveAndFlush(scooter);
+			}
+		}
+		System.out.println("All Scooter cleaned up");
 	}
 }
