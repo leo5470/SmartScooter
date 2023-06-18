@@ -59,10 +59,19 @@ export const logout = async () => {
 
 export const change_user_location = async (location: Location) => {
     const new_location = new Location(location.lat , location.lng);
-    const new_user = new User(proxt_data.current_user.id, new_location, proxt_data.current_user.username, proxt_data.current_user.credit_card, Array.from(proxt_data.current_user.coupons), proxt_data.current_user.is_admin)
+    const new_user = new User(proxt_data.current_user.id, new_location, proxt_data.current_user.username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin , proxt_data.current_user.telephone_number , proxt_data.current_user.email)
     proxt_data.current_location = new_location
     proxt_data.current_user = new_user
-    return await update_user();
+    return await sync_user();
+}
+
+export const rent_scooter = async (scooter_id:number)=>{
+
+}
+
+export const sync_user = async()=>{
+    await fetch_data<null>("/update-userinfo ", "POST" , {...proxt_data.current_user})
+    await update_user()
 }
 
 export const update_user = async () => {
@@ -86,7 +95,7 @@ export const signup = async (username: string, email: string, password: string) 
     }
 }
 
-export const get_scooters = async (range: number = 200) => {
+export const get_scooters = async (range: number = 500) => {
     const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter", "GET", {}, { "range": range });
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data != undefined) {
         console.log(scooters_data.data)
@@ -97,7 +106,7 @@ export const get_scooters = async (range: number = 200) => {
     }
 }
 
-export const get_stations = async (range: number = 2000) => {
+export const get_stations = async (range: number = 500) => {
     const stations_data = await fetch_data<Array<Station>>("/user/search/station", "GET", {}, { "range": range });
     if (stations_data.success === true && stations_data.data != null && stations_data.data != undefined) {
         console.log(stations_data.data)

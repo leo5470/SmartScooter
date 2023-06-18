@@ -40,7 +40,7 @@ export default function Map() {
         };
 
         updateScootersAndStations();
-    }, []);
+    }, [data]);
 
     const mapRef = useRef<GoogleMap>();
     const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
