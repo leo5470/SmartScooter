@@ -9,7 +9,7 @@ interface Iproxy{
     current_session:string;
 }
 
-const init_location = new Location(25.105497 , 121.597366);
+const init_location = new Location(25.01754 , 121.53970);
 
 export const anonymous_user = new User(-1 , init_location , "" , ""  ,[] , false);
 

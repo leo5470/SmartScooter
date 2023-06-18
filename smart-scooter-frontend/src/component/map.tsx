@@ -47,7 +47,7 @@ export default function Map() {
         Promise.all([update_scooters() , update_stations()]).then(()=>console.log(scooters , stations))
     }, [data])
     const mapRef = useRef<GoogleMap>();
-    const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01775, lng: 121.53971 })
+    const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
     const options = useMemo<MapOptions>(
         () => ({
             mapId: "b181cac70f27f5e6",
@@ -128,7 +128,6 @@ export default function Map() {
                             </button>
                         </MapControl>
                         {scooters === undefined ? <></> : scooters?.map((element, _index) => {
-                            console.log(element)
                             return (<Marker icon={scooter_icon} position={{ lat: element.location.lat, lng: element.location.lng }}></Marker>)
                         })}
                     </GoogleMap>
