@@ -44,6 +44,27 @@ export default function Map() {
     const mapRef = useRef<GoogleMap>();
     const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
     const [selectedScooter, setSelectedScooter] = useState<Scooter | null>(null); // 用於標記對話框 InfoWindow
+    const [rentedScooter, setRentedScooter] = useState<Scooter | null>(null); // 用於標記被租借機車
+    const [isRenting, setIsRenting] = useState(false); // 是否在租車
+
+    const handleRentButtonClick = (scooter: Scooter) => {
+        console.log(`Renting scooter with plate: ${scooter.plate}`);
+        setSelectedScooter(scooter);
+        set_scooters(prevScooters => {
+            return prevScooters.map(prevScooter => {
+                if (prevScooter.id === scooter.id) {
+                    return { ...prevScooter, isRenting: true };
+                }
+                return { ...prevScooter, isRenting: false };
+            });
+        });
+        setIsRenting(prevIsRenting => !prevIsRenting); // Toggle the value of isRenting
+    };
+    
+
+
+
+    // 建立地圖選項
     const options = useMemo<MapOptions>(
         () => ({
             mapId: "b181cac70f27f5e6",
@@ -52,8 +73,9 @@ export default function Map() {
         }),
         []
     );
+    // 載入地圖時的回調函式
     const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
-
+    // 如果 Google 地圖 API 已載入，則顯示地圖
     return isLoaded ? (
         <>
             <div className="map-container">
@@ -123,35 +145,47 @@ export default function Map() {
                                 DOWN
                             </button>
                         </MapControl>
+                        {/* 顯示 Station */}
                         {stations.map((station) => {
                             return (<Marker
                                 key={station.id}
                                 position={{ lat: station.location.lat, lng: station.location.lng }}
                                 icon={power_icon} />)
                         })}
+                        {/* 顯示 Scooter */}
                         {scooters.map((scooter) => {
-                            return (<Marker
-                                key={scooter.id}
-                                position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
-                                icon={scooter_icon}
-                                onMouseDown={()=>setSelectedScooter(scooter)}
-                            />)
+                            return (
+                                <Marker
+                                    key={scooter.id}
+                                    position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
+                                    icon={scooter.isRenting ? user_icon : scooter_icon}
+                                    onMouseDown={() => setSelectedScooter(scooter)}
+                                />
+
+                            );
                         })}
 
                         {/* 顯示選中機車的 InfoWindow */}
                         {selectedScooter && (
                             <InfoWindow
-                                position={{ lat: selectedScooter.location.lat, lng: selectedScooter.location.lng }}
+                                position={{ lat: selectedScooter.location.lat + 0.0001, lng: selectedScooter.location.lng }}
                                 onCloseClick={() => setSelectedScooter(null)}
                             >
                                 <div>
                                     <h3>{selectedScooter.plate}</h3>
                                     <p>Battery Level: {selectedScooter.battery_level}%</p>
-                                    <p>Status: {selectedScooter.status}</p>
+                                    <p>Status: {isRenting ? "Renting..." : selectedScooter.status}</p> {/* Update the status based on the isRenting value */}
+                                    <button
+                                        onClick={() => handleRentButtonClick(selectedScooter)}
+                                        className="rent-button"
+                                    >
+                                        {isRenting ? "還車" : "租車"}
+                                    </button>
                                 </div>
                             </InfoWindow>
                         )}
-                        
+
+
                     </GoogleMap>
                 </div >
             </div>

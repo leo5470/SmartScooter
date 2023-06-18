@@ -97,7 +97,7 @@ export const get_scooters = async (range: number = 200) => {
     }
 }
 
-export const get_stations = async (range: number = 200) => {
+export const get_stations = async (range: number = 2000) => {
     const stations_data = await fetch_data<Array<Station>>("/user/search/station", "GET", {}, { "range": range });
     if (stations_data.success === true && stations_data.data != null && stations_data.data != undefined) {
         console.log(stations_data.data)
