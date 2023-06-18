@@ -94,14 +94,13 @@ export default function Map() {
                             >
                                 Return
                             </button>
-                            <div>Battery Level:{scooters.filter(scooter=>scooter.id === current_order.scooter_id)[0]?.battery_level}</div>
                         </MapControl>}
                         {current_order === null ? <></> : <MapControl position="BOTTOM_LEFT">
                             <button
                                 style={{ "margin": 10, opacity: "0.7" }}
                                 className="contrast"
                             >
-                                Battery Level:{current_battery_level}
+                                Battery Level:{current_battery_level}%
                             </button>
                         </MapControl>}
                         <MapControl position="TOP_LEFT">
