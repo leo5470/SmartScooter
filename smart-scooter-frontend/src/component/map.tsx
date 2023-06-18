@@ -6,6 +6,7 @@ import {
 } from "@react-google-maps/api";
 
 import scooter_icon from "./img/vespa-motorcycle-svgrepo-com.svg"
+import renting_icon from "./img/scooter-vespa-svgrepo-com.svg";
 import power_icon from "./img/electric-station-svgrepo-com.svg";
 import user_icon from "./img/walk-svgrepo-com.svg";
 
@@ -158,7 +159,7 @@ export default function Map() {
                                 <Marker
                                     key={scooter.id}
                                     position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
-                                    icon={scooter.isRenting ? user_icon : scooter_icon}
+                                    icon={scooter.isRenting ? renting_icon : scooter_icon}
                                     onMouseDown={() => setSelectedScooter(scooter)}
                                 />
 
