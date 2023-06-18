@@ -362,7 +362,10 @@ public class SmartScooterApplication {
 			if(orderStatus == null){
 				throw new NoActiveOrderException();
 			}
-			OrderJSON orderJSON = new OrderJSON(orderStatus);
+
+			OrderData orderData = new OrderData(orderStatus);
+
+			OrderJSON orderJSON = new OrderJSON(orderData);
 			return orderJSON.makeJson(mapper);
 		}catch (Exception e){
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
@@ -383,7 +386,12 @@ public class SmartScooterApplication {
 			List<OrderStatus> allOrderStatusList = orderStatusRepository.findAllByUserIDAndActive(userId, false);
 			List<OrderStatus> requestedList = allOrderStatusList.subList(offset, limit > allOrderStatusList.size() ?
 					allOrderStatusList.size() : limit);
-			ListJSON<OrderStatus> listJSON = new ListJSON<>(requestedList);
+
+			List<OrderData> orderDataList = new ArrayList<>();
+			for(OrderStatus orderStatus : requestedList){
+				boolean add = orderDataList.add(new OrderData(orderStatus));
+			}
+			ListJSON<OrderData> listJSON = new ListJSON<>(orderDataList);
 			return listJSON.makeJson(mapper);
 		} catch (Exception e){
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
@@ -392,7 +400,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	//TODO: Test
 	@PostMapping("/api/user/recharge")
 	public String userRecharge(@RequestHeader("token") String token, @RequestBody StationID stationID){
 		try {
@@ -501,23 +508,23 @@ public class SmartScooterApplication {
 		}
 	}
 
-	@PreDestroy
-	private void destroy(){
-		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
-		for(LoginStatus loginStatus : loginStatusList){
-			loginStatus.setLogin(false);
-			loginStatus.setTok(null);
-			loginStatusRepository.saveAndFlush(loginStatus);
-		}
-		System.out.println("All loginStatus cleaned up.");
-
-		List<Scooter> scooterList = scooterRepository.findAll();
-		for(Scooter scooter : scooterList){
-			if(scooter.getStatus().equals("rented")){
-				scooter.setStatus("ready"); // or malfunction
-				scooterRepository.saveAndFlush(scooter);
-			}
-		}
-		System.out.println("All scooter cleaned up");
-	}
+//	@PreDestroy
+//	private void destroy(){
+//		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
+//		for(LoginStatus loginStatus : loginStatusList){
+//			loginStatus.setLogin(false);
+//			loginStatus.setTok(null);
+//			loginStatusRepository.saveAndFlush(loginStatus);
+//		}
+//		System.out.println("All loginStatus cleaned up.");
+//
+//		List<Scooter> scooterList = scooterRepository.findAll();
+//		for(Scooter scooter : scooterList){
+//			if(scooter.getStatus().equals("rented")){
+//				scooter.setStatus("ready"); // or malfunction
+//				scooterRepository.saveAndFlush(scooter);
+//			}
+//		}
+//		System.out.println("All scooter cleaned up");
+//	}
 }
