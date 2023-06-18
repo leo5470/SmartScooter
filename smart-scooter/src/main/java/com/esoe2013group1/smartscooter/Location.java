@@ -10,6 +10,7 @@ import org.gavaghan.geodesy.GlobalCoordinates;
 import java.util.Random;
 
 public class Location {
+    // Xinyi district
     public static final double latMax = 25.040966;
     public static final double latMin = 25.041104;
     public static final double lngMax = 121.568571;
@@ -65,6 +66,10 @@ public class Location {
         this.lng = lng;
     }
 
+    /**
+     * Test purpose and initialize to prevent non-null only
+     * @param random Whether the location needs to be initialized with random location info.
+     */
     public Location(boolean random){
         if(random) {
             Random r = new Random();
