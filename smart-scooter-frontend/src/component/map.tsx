@@ -49,16 +49,17 @@ export default function Map() {
 
     const handleRentButtonClick = (scooter: Scooter) => {
         console.log(`Renting scooter with plate: ${scooter.plate}`);
+        const nxtIsRenting = !isRenting
         setSelectedScooter(scooter);
         set_scooters(prevScooters => {
             return prevScooters.map(prevScooter => {
                 if (prevScooter.id === scooter.id) {
-                    return { ...prevScooter, isRenting: true };
+                    return { ...prevScooter, isRenting: nxtIsRenting };
                 }
                 return { ...prevScooter, isRenting: false };
             });
         });
-        setIsRenting(prevIsRenting => !prevIsRenting); // Toggle the value of isRenting
+        setIsRenting(nxtIsRenting); // Toggle the value of isRenting
     };
     
 
