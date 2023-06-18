@@ -1,13 +1,11 @@
 package com.esoe2013group1.smartscooter.json;
 
-import com.esoe2013group1.smartscooter.entity.OrderStatus;
-import jakarta.persistence.criteria.Order;
-import org.aspectj.weaver.ast.Or;
+import com.esoe2013group1.smartscooter.data.OrderData;
 
 public class OrderJSON extends JSON{
     private boolean success;
     private String message;
-    private OrderStatus data;
+    private OrderData data;
 
     public boolean isSuccess() {
         return success;
@@ -25,16 +23,16 @@ public class OrderJSON extends JSON{
         this.message = message;
     }
 
-    public OrderStatus getData() {
+    public OrderData getData() {
         return data;
     }
 
-    public void setData(OrderStatus data) {
+    public void setData(OrderData data) {
         this.data = data;
     }
 
-    public OrderJSON(OrderStatus orderStatus){
-        data = orderStatus;
+    public OrderJSON(OrderData orderData){
+        data = orderData;
         success = true;
         message = "";
     }
