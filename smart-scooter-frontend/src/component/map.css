@@ -7,3 +7,13 @@
     width: 100%;
     height: 100vh;
   }
+
+  .rent-button {
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    padding-top: 6px; /* 調整這裡的數值以達到適合的上方偏移量 */
+}
+
+
