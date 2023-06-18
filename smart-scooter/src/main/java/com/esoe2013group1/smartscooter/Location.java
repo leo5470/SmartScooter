@@ -10,10 +10,10 @@ import org.gavaghan.geodesy.GlobalCoordinates;
 import java.util.Random;
 
 public class Location {
-    public static final double latMax = 25.068277;
-    public static final double latMin = 25.026708;
-    public static final double lngMax = 121.567045;
-    public static final double lngMin = 121.511162;
+    public static final double latMax = 25.040966;
+    public static final double latMin = 25.041104;
+    public static final double lngMax = 121.568571;
+    public static final double lngMin = 121.568387;
 
     public enum Direction{
         EAST(0),
