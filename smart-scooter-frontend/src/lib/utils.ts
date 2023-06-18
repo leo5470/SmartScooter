@@ -86,7 +86,7 @@ export const signup = async (username: string, email: string, password: string) 
     }
 }
 
-export const get_scooters = async (range: number = 150) => {
+export const get_scooters = async (range: number = 200) => {
     const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter", "GET", {}, { "range": range });
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data != undefined) {
         return scooters_data.data;
@@ -96,7 +96,7 @@ export const get_scooters = async (range: number = 150) => {
     }
 }
 
-export const get_stations = async (range: number = 150) => {
+export const get_stations = async (range: number = 200) => {
     const stations_data = await fetch_data<Array<Station>>("/user/search/station", "GET", {}, { "range": range });
     if (stations_data.success === true && stations_data.data != null && stations_data.data != undefined) {
         return stations_data.data;
