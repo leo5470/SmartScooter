@@ -123,15 +123,20 @@ export default function Map() {
                                 DOWN
                             </button>
                         </MapControl>
-                        {/*新增機車圖標*/}
-                        {scooters.map((scooter) => (
-                            <Marker
+                        {stations.map((station) => {
+                            return (<Marker
+                                key={station.id}
+                                position={{ lat: station.location.lat, lng: station.location.lng }}
+                                icon={power_icon} />)
+                        })}
+                        {scooters.map((scooter) => {
+                            return (<Marker
                                 key={scooter.id}
                                 position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
                                 icon={scooter_icon}
-                                onClick={() => setSelectedScooter(scooter)}
-                            />
-                        ))}
+                                onMouseDown={()=>setSelectedScooter(scooter)}
+                            />)
+                        })}
 
                         {/* 顯示選中機車的 InfoWindow */}
                         {selectedScooter && (
@@ -146,14 +151,7 @@ export default function Map() {
                                 </div>
                             </InfoWindow>
                         )}
-
-                        {stations.map((station) => (
-                            <Marker
-                                key={station.id}
-                                position={{ lat: station.location.lat, lng: station.location.lng }}
-                                icon={power_icon}
-                            />
-                        ))}
+                        
                     </GoogleMap>
                 </div >
             </div>
