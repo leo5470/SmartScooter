@@ -89,6 +89,10 @@ export const signup = async (username: string, email: string, password: string) 
 export const get_scooters = async (range: number = 200) => {
     const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter", "GET", {}, { "range": range });
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data != undefined) {
+        console.log(scooters_data.data)
+        scooters_data.data.forEach((scooter:Scooter) => {
+            console.log(`Scooter ID: ${scooter.id}`);
+        })
         return scooters_data.data;
     }
     else {
