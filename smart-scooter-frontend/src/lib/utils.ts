@@ -90,9 +90,6 @@ export const get_scooters = async (range: number = 200) => {
     const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter", "GET", {}, { "range": range });
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data != undefined) {
         console.log(scooters_data.data)
-        scooters_data.data.forEach((scooter:Scooter) => {
-            console.log(`Scooter ID: ${scooter.id}`);
-        })
         return scooters_data.data;
     }
     else {
@@ -103,6 +100,7 @@ export const get_scooters = async (range: number = 200) => {
 export const get_stations = async (range: number = 200) => {
     const stations_data = await fetch_data<Array<Station>>("/user/search/station", "GET", {}, { "range": range });
     if (stations_data.success === true && stations_data.data != null && stations_data.data != undefined) {
+        console.log(stations_data.data)
         return stations_data.data;
     }
     else {
