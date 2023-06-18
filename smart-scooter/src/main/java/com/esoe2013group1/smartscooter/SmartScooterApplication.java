@@ -173,6 +173,7 @@ public class SmartScooterApplication {
 					scooter.setLat(userData.getLocation().getLat());
 					scooter.setLng(userData.getLocation().getLng());
 
+					scooterRepository.saveAndFlush(scooter);
 					orderStatusRepository.saveAndFlush(orderStatus);
 				}
 
