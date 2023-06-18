@@ -13,7 +13,7 @@ import user_icon from "./img/walk-svgrepo-com.svg";
 import { atom_data } from "../lib/store";
 import MapControl from "./MapControl";
 import "./map.css";
-import { change_user_location, get_order, get_scooters, get_stations, recharge_scooter, rent_scooter, return_scooter } from "../lib/utils";
+import { change_user_location, get_battery_level, get_order, get_scooters, get_stations, recharge_scooter, rent_scooter, return_scooter } from "../lib/utils";
 import { Scooter, Location, scooterStatus, User, Station, Order } from '../lib/model';
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
@@ -191,7 +191,7 @@ export default function Map() {
                             >
                                 <div>
                                     <h3>Recharge Station</h3>
-                                    <button onClick={async()=> set_current_order( await recharge_scooter(selectedStation.id))}
+                                    <button onClick={async()=> { await recharge_scooter(selectedStation.id); await set_battery_level(await get_battery_level()); }}
                                     >
                                         Recharge
                                     </button>

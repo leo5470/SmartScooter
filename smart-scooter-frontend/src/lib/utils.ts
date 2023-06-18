@@ -140,7 +140,7 @@ export const recharge_scooter = async(station_id:number)=>{
 
 export const get_battery_level = async()=>{
     const battery_data = await fetch_data<null>("/user/get-battery" , "GET");
-    if (battery_data.battery_level !== undefined && battery_data.success === true){
+    if (battery_data.battery_level !== undefined && battery_data.battery_level !== null && battery_data.success === true){
         return battery_data.battery_level;
     }
     else{
