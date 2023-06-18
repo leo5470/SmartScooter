@@ -8,13 +8,7 @@ export default function UserNav() {
                     <strong> Smart Scooter - User </strong>
                 </li>
                 <li>
-                    <Link to="/user/rent">Rent</Link>
-                </li>
-                <li>
-                    <Link to="/user/search">Search</Link>
-                </li>
-                <li>
-                    <Link to="/user/recharge">Recharge</Link>
+                    <Link to="/user/map">Map</Link>
                 </li>
             </ul>
             <ul>

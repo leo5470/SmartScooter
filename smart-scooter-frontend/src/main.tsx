@@ -41,9 +41,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage></ErrorPage>,
     children: [
       { path: "settings", element: <Settings></Settings> },
-      { path: "rent", element: <Rent></Rent> },
-      { path: "search", element: <Search></Search> },
-      { path: "recharge", element: <Recharge></Recharge> }
+      { path: "map", element: <Search></Search> },
     ]
   },
   {
