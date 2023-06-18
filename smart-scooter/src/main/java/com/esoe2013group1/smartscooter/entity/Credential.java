@@ -1,6 +1,6 @@
 package com.esoe2013group1.smartscooter.entity;
 
-import com.esoe2013group1.smartscooter.requestbodydata.SignupData;
+import com.esoe2013group1.smartscooter.data.SignupData;
 import jakarta.persistence.*;
 
 @Entity

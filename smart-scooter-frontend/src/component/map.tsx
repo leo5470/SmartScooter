@@ -22,6 +22,7 @@ import { Scooter, Location, scooterStatus, User, Station } from '../lib/model';
 
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
+import { useAtom } from "jotai";
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
@@ -47,7 +48,7 @@ export default function Map() {
         Promise.all([update_scooters() , update_stations()]).then(()=>console.log(scooters , stations))
     }, [data])
     const mapRef = useRef<GoogleMap>();
-    const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
+    const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01775, lng: 121.53971 })
     const options = useMemo<MapOptions>(
         () => ({
             mapId: "b181cac70f27f5e6",
@@ -56,6 +57,7 @@ export default function Map() {
         }),
         []
     );
+    const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     return isLoaded ? (
         <>
