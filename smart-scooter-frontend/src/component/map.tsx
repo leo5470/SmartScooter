@@ -14,17 +14,15 @@ import { atom_data } from "../lib/store";
 import MapControl from "./MapControl";
 import "./map.css";
 import { change_user_location, get_battery_level, get_order, get_scooters, get_stations, recharge_scooter, rent_scooter, return_scooter } from "../lib/utils";
-import { Scooter, Location, scooterStatus, User, Station, Order } from '../lib/model';
+import { Scooter, Location, Station, Order } from '../lib/model';
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
 
-const debug = true
-
 export default function Map() {
-    const [data, set_data] = useAtom(atom_data);
+    const [data, _] = useAtom(atom_data);
     const map_api_key = import.meta.env.VITE_GOOGLE_MAP_API === undefined ? "" : import.meta.env.VITE_GOOGLE_MAP_API
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -61,7 +59,6 @@ export default function Map() {
     const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
     const [selectedScooter, setSelectedScooter] = useState<Scooter | null>(null); // 用於標記對話框 InfoWindow
     const [selectedStation, setSelectedStation] = useState<Station | null>(null); // 用於標記對話框 InfoWindow
-    const [use_coupon, set_use_coupon] = useState<boolean>(false);
     // 建立地圖選項
     const options = useMemo<MapOptions>(
         () => ({
@@ -206,7 +203,7 @@ export default function Map() {
                                 onCloseClick={() => setSelectedScooter(null)}
                             >
                                 <div>
-                                    <h3>{selectedScooter.plate}</h3>
+                                    <h3>{selectedScooter.plate_number}</h3>
                                     <p>Battery Level: {selectedScooter.battery_level}%</p>
                                     <p>Status: {selectedScooter.status}</p> {/* Update the status based on the isRenting value */}
                                     <button

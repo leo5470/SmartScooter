@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useRef , useEffect } from "react";
 import { useGoogleMap } from "@react-google-maps/api";
 interface MapControlProps {

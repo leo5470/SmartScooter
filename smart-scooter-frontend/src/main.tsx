@@ -18,8 +18,6 @@ import Admin from "./routes/admin";
 import Search from "./routes/user/search";
 
 import Settings from "./component/settings";
-import Rent from "./component/rent";
-import Recharge from "./component/recharge";
 
 import "./asset/css/pico.min.css"
 import Logout from "./routes/logout";
