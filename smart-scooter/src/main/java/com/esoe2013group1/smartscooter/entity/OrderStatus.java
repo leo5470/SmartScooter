@@ -165,7 +165,7 @@ public class OrderStatus {
 
     public boolean batteryDrop(){
         double distanceInMeters = distance * 1000;
-        return distanceInMeters % 200 == 0; // 1% per 200 meters
+        return distanceInMeters % 20 == 0; // 1% per 20 meters
     }
 
     public void calcDistance() {
