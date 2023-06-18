@@ -128,6 +128,7 @@ export default function Map() {
                             </button>
                         </MapControl>
                         {scooters === undefined ? <></> : scooters?.map((element, _index) => {
+                            console.log(element)
                             return (<Marker icon={scooter_icon} position={{ lat: element.location.lat, lng: element.location.lng }}></Marker>)
                         })}
                     </GoogleMap>
