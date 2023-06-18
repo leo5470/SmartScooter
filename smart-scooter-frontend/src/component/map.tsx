@@ -22,7 +22,6 @@ import { Scooter, Location, scooterStatus, User, Station } from '../lib/model';
 
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
-import { useAtom } from "jotai";
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
@@ -57,7 +56,6 @@ export default function Map() {
         }),
         []
     );
-    const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     const onLoad = useCallback((map: any) => { (mapRef.current = map) }, []);
     return isLoaded ? (
         <>
