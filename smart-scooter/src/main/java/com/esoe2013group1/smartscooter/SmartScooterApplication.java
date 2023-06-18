@@ -400,6 +400,32 @@ public class SmartScooterApplication {
 		}
 	}
 
+	@GetMapping("/api/user/get-battery")
+	public String getBattery(@RequestHeader("token") String token){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if(loginStatus == null){
+				throw new TokenDoesNotExistException();
+			}
+			int userId = loginStatus.getId();
+
+			OrderStatus orderStatus = orderStatusRepository.findByUserIDAndActive(userId, true);
+			if(orderStatus == null){
+				throw new NoActiveOrderException();
+			}
+			Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
+
+			Integer battery = scooter.getBattery_level();
+
+			BatteryJSON batteryJSON = new BatteryJSON(battery);
+			return batteryJSON.makeJson(mapper);
+		} catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			BatteryJSON batteryJSON = new BatteryJSON(e.getMessage());
+			return batteryJSON.makeJson(mapper);
+		}
+	}
+
 	@PostMapping("/api/user/recharge")
 	public String userRecharge(@RequestHeader("token") String token, @RequestBody StationID stationID){
 		try {
@@ -437,7 +463,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// TODO: Not yet tested
 	@PostMapping("/api/user/return")
 	public String returnScooter(@RequestHeader("token") String token, @RequestBody ReturnData returnData){
 		try {
