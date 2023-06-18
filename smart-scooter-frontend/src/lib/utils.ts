@@ -1,5 +1,5 @@
 import { config } from "./config";
-import { Scooter, User , Location, Station } from "./model";
+import { Scooter, User , Location, Station, Order } from "./model";
 
 import { proxt_data, anonymous_user } from "./store";
 
@@ -9,6 +9,7 @@ interface Iresponse<T> {
     message: string | null;
     token: string | null;
     userData?: User | null;
+    battery_level?:number|null|undefined;
 }
 
 export const check_api = async () => {
@@ -64,11 +65,6 @@ export const change_user_location = async (location: Location) => {
     proxt_data.current_user = new_user
     return await sync_user();
 }
-
-export const rent_scooter = async (scooter_id:number)=>{
-
-}
-
 export const sync_user = async()=>{
     await fetch_data<null>("/update-userinfo ", "POST" , {...proxt_data.current_user})
     await update_user()
@@ -95,7 +91,27 @@ export const signup = async (username: string, email: string, password: string) 
     }
 }
 
-export const get_scooters = async (range: number = 500) => {
+export const get_order = async()=>{
+    const order_data = await fetch_data<Order>("/user/active-order" , "GET");
+    if (order_data.success === true && order_data.data != null){
+        console.log(order_data.data)
+        return order_data.data
+    }
+    else{
+        return null
+    }
+}
+
+export const rent_scooter = async(scooter_id:number)=>{
+    await fetch_data<null>("/user/rent" , "POST" , {"scooter_id":scooter_id} , {})
+    return await get_order()
+}
+
+export const return_scooter = async()=>{
+    await fetch_data<null>("/user/return" , "POST" , {"use_coupon":false});
+    return await get_order()
+}
+export const get_scooters = async (range: number = 100) => {
     const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter", "GET", {}, { "range": range });
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data != undefined) {
         console.log(scooters_data.data)
@@ -114,5 +130,20 @@ export const get_stations = async (range: number = 500) => {
     }
     else {
         return [];
+    }
+}
+
+export const recharge_scooter = async(station_id:number)=>{
+    await fetch_data<null>("/user/recharge" , "POST" , {"station_id":station_id} , {})
+    return await get_order()
+}
+
+export const get_battery_level = async()=>{
+    const battery_data = await fetch_data<null>("/user/get-battery" , "GET");
+    if (battery_data.battery_level !== undefined && battery_data.success === true){
+        return battery_data.battery_level;
+    }
+    else{
+        return 100;
     }
 }
