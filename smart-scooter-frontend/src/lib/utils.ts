@@ -1,6 +1,5 @@
 import { config } from "./config";
 import { Scooter, User, Location, Station, Order } from "./model";
-import { Scooter, User, Location, Station, Order } from "./model";
 
 import { proxt_data, anonymous_user } from "./store";
 
@@ -89,7 +88,7 @@ export const sync_user = async () => {
     await fetch_data<null>("/update-userinfo ", "POST", { ...proxt_data.current_user })
     await update_user()
 }
-update_user = async () => {
+export const update_user = async () => {
         if (proxt_data.current_session === "") {
             proxt_data.current_user = { ...anonymous_user };
             return;
