@@ -34,7 +34,7 @@ export default function Showcase(props: prop) {
                         {/** PerfMon will detect performance issues */}
                         <PerformanceMonitor onDecline={() => degrade(true)} />
                         {/* Renders contents "live" into a HDRI environment (scene.environment). */}
-                        <Environment frames={degraded ? 1 : Infinity} preset="forest" resolution={256} background blur={1}>
+                        <Environment frames={degraded ? 1 : Infinity} resolution={256} background blur={1}>
                             <Lightformers />
                         </Environment>
 

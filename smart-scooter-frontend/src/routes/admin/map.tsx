@@ -4,7 +4,7 @@ export default function Search() {
     return (
         <>
             <section>
-                <Map></Map>
+                <Map dev={true}></Map>
             </section>
 
         </>
