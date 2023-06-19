@@ -17,6 +17,7 @@ import { change_user_location, get_battery_level, get_order, get_scooters, get_s
 import { Scooter, Location, Station, Order } from '../lib/model';
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
+import { ToastContainer, toast } from 'react-toastify';
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
@@ -31,7 +32,9 @@ export default function Map() {
     const [scooters, set_scooters] = useState<Array<Scooter>>([]); // 存取機車
     const [stations, set_stations] = useState<Array<Station>>([]); // 存取充電站
     const [current_order, set_current_order] = useState<Order | null>(null);
-    const [current_battery_level , set_battery_level] = useState(100);
+    const [current_battery_level, set_battery_level] = useState(100);
+    const [use_coupon, set_use_coupon] = useState(false);
+
 
     useEffect(() => { // 取得資料庫資料
         const updateScootersAndStations = async () => {
@@ -45,9 +48,9 @@ export default function Map() {
                 console.log(e)
                 set_current_order(null)
             }
-            try{
+            try {
                 set_battery_level(await get_battery_level());
-            }catch(e){
+            } catch (e) {
                 console.log(e)
                 set_battery_level(100);
             }
@@ -59,6 +62,7 @@ export default function Map() {
     const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
     const [selectedScooter, setSelectedScooter] = useState<Scooter | null>(null); // 用於標記對話框 InfoWindow
     const [selectedStation, setSelectedStation] = useState<Station | null>(null); // 用於標記對話框 InfoWindow
+    const [show_return_window, set_show_return_window] = useState(false)
     // 建立地圖選項
     const options = useMemo<MapOptions>(
         () => ({
@@ -82,16 +86,26 @@ export default function Map() {
                         options={options}
                         onLoad={onLoad}
                     >   {/* 使用 MapControl 元件來創建地圖控制按鈕 */}
-                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={current_order === null ? user_icon : renting_icon} />
-                        {current_order === null ? <></> : <MapControl position="TOP_RIGHT">
-                            <button
-                                style={{ "margin": 10, opacity: "0.7" }}
-                                className="contrast"
-                                onClick={() => { return_scooter(); location.reload() }}
+                        
+                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={current_order === null ? user_icon : renting_icon} onMouseDown={() => set_show_return_window(true)} />
+                        {(current_order !== null && show_return_window === true) ?
+                            <InfoWindow
+                                position={{ lat: data.current_location.lat, lng: data.current_location.lng }}
+                                onCloseClick={() => set_show_return_window(false)}
                             >
-                                Return
-                            </button>
-                        </MapControl>}
+                                <div>
+                                    <h3>Return Scooter</h3>
+                                    {data.current_user.coupons > 0 ? <p>
+
+                                        <input type="checkbox" checked={use_coupon} onClick={() => set_use_coupon(!use_coupon)} />
+                                        Use coupon
+                                    </p> : <></>}
+                                    <button onClick={() => { return_scooter(); toast("Wow so easy!"); setTimeout(() => location.reload(), 500) }}
+                                    >
+                                        Return
+                                    </button>
+                                </div>
+                            </InfoWindow> : <></>}
                         {current_order === null ? <></> : <MapControl position="BOTTOM_LEFT">
                             <button
                                 style={{ "margin": 10, opacity: "0.7" }}
@@ -187,7 +201,7 @@ export default function Map() {
                             >
                                 <div>
                                     <h3>Recharge Station</h3>
-                                    <button onClick={async()=> { await recharge_scooter(selectedStation.id); await set_battery_level(await get_battery_level()); }}
+                                    <button onClick={async () => { await recharge_scooter(selectedStation.id); await set_battery_level(await get_battery_level()); }}
                                     >
                                         Recharge
                                     </button>
@@ -203,7 +217,7 @@ export default function Map() {
                                 onCloseClick={() => setSelectedScooter(null)}
                             >
                                 <div>
-                                    <h3>{selectedScooter.plate_number}</h3>
+                                    <h3>{selectedScooter.plate}</h3>
                                     <p>Battery Level: {selectedScooter.battery_level}%</p>
                                     <p>Status: {selectedScooter.status}</p> {/* Update the status based on the isRenting value */}
                                     <button
@@ -219,6 +233,7 @@ export default function Map() {
 
                     </GoogleMap>
                 </div >
+                <ToastContainer />
             </div>
         </>
     ) : <></>

@@ -18,13 +18,13 @@ export class Location {
 }
 
 export class Scooter extends PhysicalObject {
-    constructor(scooter_id: number, location: Location, public battery_level: number, public plate_number: string, public status: scooterStatus) {
+    constructor(scooter_id: number, location: Location, public battery_level: number, public plate: string, public status: scooterStatus) {
         super(scooter_id, location);
     }
 }
 
 export class User extends PhysicalObject {
-    constructor(user_id: number, location: Location, public username: string, public credit_card: string, public coupons: Number, public is_admin: boolean, public telephone_number: string, public email: string) {
+    constructor(user_id: number, location: Location, public username: string, public credit_card: string, public coupons: number, public is_admin: boolean, public telephone_number: string, public email: string) {
         super(user_id, location);
     }
 }

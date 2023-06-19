@@ -107,8 +107,8 @@ export const rent_scooter = async(scooter_id:number)=>{
     return await get_order()
 }
 
-export const return_scooter = async()=>{
-    await fetch_data<null>("/user/return" , "POST" , {"use_coupon":false});
+export const return_scooter = async(use_coupon:boolean = false)=>{
+    await fetch_data<null>("/user/return" , "POST" , {"use_coupon":use_coupon});
     return await get_order()
 }
 export const get_scooters = async (range: number = 100) => {
