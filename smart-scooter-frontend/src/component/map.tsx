@@ -85,8 +85,7 @@ export default function Map() {
                         mapContainerClassName="map-container"
                         options={options}
                         onLoad={onLoad}
-                    >   {/* 使用 MapControl 元件來創建地圖控制按鈕 */}
-                        
+                    >   
                         <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={current_order === null ? user_icon : renting_icon} onMouseDown={() => set_show_return_window(true)} />
                         {(current_order !== null && show_return_window === true) ?
                             <InfoWindow
