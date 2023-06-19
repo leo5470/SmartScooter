@@ -534,23 +534,23 @@ public class SmartScooterApplication {
 		}
 	}
 
-//	@PreDestroy
-//	private void destroy(){
-//		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
-//		for(LoginStatus loginStatus : loginStatusList){
-//			loginStatus.setLogin(false);
-//			loginStatus.setTok(null);
-//			loginStatusRepository.saveAndFlush(loginStatus);
-//		}
-//		System.out.println("All loginStatus cleaned up.");
-//
-//		List<Scooter> scooterList = scooterRepository.findAll();
-//		for(Scooter scooter : scooterList){
-//			if(scooter.getStatus().equals("rented")){
-//				scooter.setStatus("ready"); // or malfunction
-//				scooterRepository.saveAndFlush(scooter);
-//			}
-//		}
-//		System.out.println("All scooter cleaned up");
-//	}
+	@PreDestroy
+	private void destroy(){
+		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
+		for(LoginStatus loginStatus : loginStatusList){
+			loginStatus.setLogin(false);
+			loginStatus.setTok(null);
+			loginStatusRepository.saveAndFlush(loginStatus);
+		}
+		System.out.println("All loginStatus cleaned up.");
+
+		List<Scooter> scooterList = scooterRepository.findAll();
+		for(Scooter scooter : scooterList){
+			if(scooter.getStatus().equals("rented")){
+				scooter.setStatus("malfunction");
+				scooterRepository.saveAndFlush(scooter);
+			}
+		}
+		System.out.println("All scooter cleaned up");
+	}
 }
