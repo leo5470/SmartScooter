@@ -65,8 +65,19 @@ export const login = async (username: string, password: string) => {
     if (login_data.success === true && login_data.token != undefined) {
         proxt_data.current_session = login_data.token;
     }
+    proxt_data.is_admin = await check_admin();
     return await update_user();
 };
+
+export const check_admin = async () => {
+    try {
+        fetch_data<null>("/admin/is-admin", "GET")
+        return true
+    }
+    catch {
+        return false
+    }
+}
 
 // 登出
 export const logout = async () => {
