@@ -44,7 +44,7 @@ export default function RentHistoryTable({ order }: Prop) {
                         <li><h5>時間<br />{order.return_time}</h5></li>
                         <li><h5>還車地<br /><LocationComponent location={order.history[order.history.length - 1]}></LocationComponent></h5></li>
                     </td>
-                    <td rowSpan={2}><h2 style={{ textAlign: "center" }}>NT{order.price}</h2></td>
+                    <td rowSpan={2}><h2 style={{ textAlign: "center" }}>NT{order.price}</h2><br /><span style={{ color: "white", fontWeight: "bold" }}>✅已使用優惠卷</span></td>
                     <td rowSpan={2}><h2 style={{ textAlign: "center" }}>-1次</h2></td>
                 </tr>
                 <tr>
