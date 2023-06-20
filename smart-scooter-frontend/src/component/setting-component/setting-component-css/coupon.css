@@ -2,7 +2,7 @@
   .coupon-wrapper {
     background-color: #F7FFE5;
     padding: 20px;
-    border-radius: 10px;
+    border-radius: 30px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
@@ -12,6 +12,7 @@
   
   .coupon-title {
     font-size: 24px;
+    margin-bottom: 5px;
     color: #333;
   }
   
