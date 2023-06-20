@@ -516,6 +516,12 @@ public class SmartScooterApplication {
 			if (loginStatus == null) {
 				throw new TokenDoesNotExistException();
 			}
+			int id = loginStatus.getId();
+			Credential credential = credentialRepository.findById(id).orElseThrow();
+			if(!credential.getAdmin()){
+				throw new PermissionDeniedException();
+			}
+
 			Scooter scooter = scooterRepository.findById(scooterID.getId()).orElseThrow();
 			String status = scooter.getStatus();
 			if(!("malfunction".equals(status))){
@@ -527,6 +533,35 @@ public class SmartScooterApplication {
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
 			return generalJSON.makeJson(mapper);
 
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
+			return generalJSON.makeJson(mapper);
+		}
+	}
+
+	@PostMapping("/api/admin/set-admin")
+	public String setAdmin(@RequestHeader("token") String token, @RequestBody Username username){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if (loginStatus == null) {
+				throw new TokenDoesNotExistException();
+			}
+			int id = loginStatus.getId();
+			Credential adminCredential = credentialRepository.findById(id).orElseThrow();
+			if(!adminCredential.getAdmin()){
+				throw new PermissionDeniedException();
+			}
+
+			User user = userRepository.findByUsername(username.getName());
+			int userID = user.getId();
+
+			Credential userCredential = credentialRepository.findById(userID).orElseThrow();
+			userCredential.setAdmin(true);
+			credentialRepository.saveAndFlush(userCredential);
+
+			GeneralJSON generalJSON = new GeneralJSON(true, "");
+			return generalJSON.makeJson(mapper);
 		}catch (Exception e){
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
