@@ -13,13 +13,13 @@ import user_icon from "./img/walk-svgrepo-com.svg";
 import { atom_data } from "../lib/store";
 import MapControl from "./MapControl";
 import "./map.css";
-import { change_user_location, get_battery_level, get_order, get_scooters, get_stations, recharge_scooter, rent_scooter, return_scooter, update_order } from "../lib/utils";
-import { Scooter, Location, Station, Order } from '../lib/model';
+import { change_user_location, get_battery_level, get_scooters, get_stations, recharge_scooter, rent_scooter, return_scooter, update_order } from "../lib/utils";
+import { Scooter, Location, Station } from '../lib/model';
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
 
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
@@ -43,8 +43,8 @@ export default function Map({dev}:mapProps) {
 
     useEffect(() => { // 取得資料庫資料
         const updateScootersAndStations = async () => {
-            set_scooters(await get_scooters());
-            set_stations(await get_stations());
+            set_scooters(await get_scooters(dev?300:100));
+            set_stations(await get_stations(dev?1000:500));
             await update_order()
         };
         const getOrderData = async () => {
