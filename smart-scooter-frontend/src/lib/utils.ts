@@ -79,20 +79,20 @@ export const logout = async () => {
 // 更改使用者位置
 
 export const change_user_info = async (username: string, email: string, telephone: string) => {
-    const new_user = new User(proxt_data.current_user.id, proxt_data.current_location, username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin, telephone, email);
+    const new_user = new User(proxt_data.current_user.id, proxt_data.current_location, username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, telephone, email);
     proxt_data.current_user = new_user
     return await sync_user()
 }
 
 export const change_user_location = async (location: Location) => {
     const new_location = new Location(location.lat, location.lng);
-    const new_user = new User(proxt_data.current_user.id, new_location, proxt_data.current_user.username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin, proxt_data.current_user.telephone_number, proxt_data.current_user.email)
+    const new_user = new User(proxt_data.current_user.id, new_location, proxt_data.current_user.username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, proxt_data.current_user.telephone_number, proxt_data.current_user.email)
     proxt_data.current_location = new_location
     proxt_data.current_user = new_user
     return await sync_user()
 }
-export const change_user_payment = async(card:string)=>{
-    const new_user = new User(proxt_data.current_user.id, proxt_data.current_user.location, proxt_data.current_user.username, card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin, proxt_data.current_user.telephone_number, proxt_data.current_user.email)
+export const change_user_payment = async (card: string) => {
+    const new_user = new User(proxt_data.current_user.id, proxt_data.current_user.location, proxt_data.current_user.username, card, proxt_data.current_user.coupons, proxt_data.current_user.telephone_number, proxt_data.current_user.email)
     proxt_data.current_user = new_user
     return await sync_user()
 }
@@ -173,12 +173,12 @@ export const get_stations = async (range: number = 500) => {
     }
 };
 
-export const get_past_orders = async()=>{
-    const orders_data = await fetch_data<Array<Order>>("/user/past-order" , "GET" , {} , {"limit":999 , "offset":0})
-    if (orders_data.success === true  && orders_data.data!= undefined && orders_data.data!=null){
+export const get_past_orders = async () => {
+    const orders_data = await fetch_data<Array<Order>>("/user/past-order", "GET", {}, { "limit": 999, "offset": 0 })
+    if (orders_data.success === true && orders_data.data != undefined && orders_data.data != null) {
         return orders_data.data;
     }
-    else{
+    else {
         return []
     }
 }
