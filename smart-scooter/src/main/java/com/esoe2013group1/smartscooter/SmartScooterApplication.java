@@ -472,6 +472,7 @@ public class SmartScooterApplication {
 				throw new OutOfReachException(station);
 			}
 			user.addCoupon();
+			orderStatus.addChargeTimes();
 
 			int scooterId = orderStatus.getScooterID();
 			Scooter scooter = scooterRepository.findById(scooterId).orElseThrow();
@@ -514,6 +515,7 @@ public class SmartScooterApplication {
 					throw new CouponNotAvailableException();
 				}
 				user.useCoupon();
+				orderStatus.setUseCoupon(true);
 				userRepository.saveAndFlush(user);
 			}
 

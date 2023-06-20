@@ -58,6 +58,12 @@ public class OrderStatus {
     @JsonProperty("total_time")
     private Integer totalTime;
 
+    @JsonProperty("charge_times")
+    private Integer chargeTimes;
+
+    @JsonProperty("use_coupon")
+    private boolean useCoupon;
+
     public Integer getId() {
         return id;
     }
@@ -146,6 +152,22 @@ public class OrderStatus {
         this.lngHistory = lngHistory;
     }
 
+    public Integer getChargeTimes() {
+        return chargeTimes;
+    }
+
+    public void setChargeTimes(Integer chargeTimes) {
+        this.chargeTimes = chargeTimes;
+    }
+
+    public boolean isUseCoupon() {
+        return useCoupon;
+    }
+
+    public void setUseCoupon(boolean useCoupon) {
+        this.useCoupon = useCoupon;
+    }
+
     public void calcTotalTime(){
         LocalDateTime start = rentTime;
         LocalDateTime end = returnTime;
@@ -183,6 +205,10 @@ public class OrderStatus {
         lngHistory.add(location.getLng());
     }
 
+    public void addChargeTimes(){
+        chargeTimes += 1;
+    }
+
     public Location getLastLocation(){
         int last = latHistory.size() - 1;
         Location location = new Location();
@@ -198,6 +224,8 @@ public class OrderStatus {
         this.scooterID = scooterID;
         this.rentTime = rentTime;
         active = true;
+        useCoupon = false;
+        chargeTimes = 0;
 
         latHistory = new ArrayList<>();
         lngHistory = new ArrayList<>();
