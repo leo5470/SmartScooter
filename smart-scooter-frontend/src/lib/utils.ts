@@ -185,6 +185,7 @@ export const get_past_orders = async()=>{
 
 export const recharge_scooter = async (station_id: number) => {
     await fetch_data<null>("/user/recharge", "POST", { "station_id": station_id }, {})
+    await update_user()
     return await update_order()
 }
 
