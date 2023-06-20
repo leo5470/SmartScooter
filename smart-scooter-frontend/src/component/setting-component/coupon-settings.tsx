@@ -16,15 +16,17 @@ export default function CouponSettings() {
         <div>
             <article>
                 <hgroup>
-                    <h1>Rent History</h1>
+                    <h1>Your coupons ({data.current_user.coupons})</h1>
                     <h2></h2>
                 </hgroup>
-                <select>
-                    <option value="time" placeholder="Sort by">Sort: 由舊到新</option>
-                </select>
-                <article style={{ backgroundColor: "#8F9491" }}>
-                    <CouponTable/>
-                </article>
+                {coupon_array.map(() => {
+                    return (
+                        <article style={{ backgroundColor: "#8F9491" }}>
+                            <CouponTable />
+                        </article>
+                    )
+                })}
+
             </article>
         </div>
     )
