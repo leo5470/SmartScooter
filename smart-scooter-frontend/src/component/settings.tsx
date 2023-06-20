@@ -4,8 +4,12 @@ import AccountSettings from './setting-component/account-settings';
 import PaymentSettings from './setting-component/payment-settings';
 import CouponSettings from './setting-component/coupon-settings';
 import RentHistory from './setting-component/rent-history';
+import { atom_data } from '../lib/store';
+import { useAtom } from 'jotai';
+import AddAdmin from './setting-component/add-admin-settings';
 
 export default function Settings() {
+  const [data,] = useAtom(atom_data)
   const [activeTab, setActiveTab] = useState('account');
 
   const handleTabClick = (tab: string) => {
@@ -27,24 +31,37 @@ export default function Settings() {
           >
             <strong>Account</strong>
           </div>
-          <div
-            className={`settings-menu-item ${activeTab === 'payment' ? 'active' : ''}`}
-            onClick={() => handleTabClick('payment')}
-          >
-            <strong>Payment</strong>
-          </div>
-          <div
-            className={`settings-menu-item ${activeTab === 'coupon' ? 'active' : ''}`}
-            onClick={() => handleTabClick('coupon')}
-          >
-            <strong>Coupon</strong>
-          </div>
-          <div
-            className={`settings-menu-item ${activeTab === 'renthistory' ? 'active' : ''}`}
-            onClick={() => handleTabClick('renthistory')}
-          >
-            <strong>Rent History</strong>
-          </div>
+          {data.is_admin === false ?
+            <>
+              <div
+                className={`settings-menu-item ${activeTab === 'payment' ? 'active' : ''}`}
+                onClick={() => handleTabClick('payment')}
+              >
+                <strong>Payment</strong>
+              </div>
+              <div
+                className={`settings-menu-item ${activeTab === 'coupon' ? 'active' : ''}`}
+                onClick={() => handleTabClick('coupon')}
+              >
+                <strong>Coupon</strong>
+              </div>
+              <div
+                className={`settings-menu-item ${activeTab === 'renthistory' ? 'active' : ''}`}
+                onClick={() => handleTabClick('renthistory')}
+              >
+                <strong>Rent History</strong>
+              </div>
+
+            </> : <>
+              <div
+                className={`settings-menu-item ${activeTab === 'add-admin' ? 'active' : ''}`}
+                onClick={() => handleTabClick('add-admin')}
+              >
+                <strong>Add admin</strong>
+              </div>
+
+            </>}
+
         </div>
 
         <div className="settings-content">
@@ -62,9 +79,14 @@ export default function Settings() {
 
           </div>
 
-          <div className={`renhistory-settings ${activeTab === 'renthistory' ? 'show' : ''}`}>
+          <div className={`renthistory-settings ${activeTab === 'renthistory' ? 'show' : ''}`}>
             <RentHistory />
           </div>
+
+          <div className={`add-admin-settings ${activeTab === 'add-admin' ? 'show' : ''}`}>
+            <AddAdmin />
+          </div>
+
         </div>
       </div>
     </div>

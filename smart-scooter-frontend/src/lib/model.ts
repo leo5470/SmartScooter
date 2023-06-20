@@ -1,8 +1,8 @@
 export enum scooterStatus {
-    "ready",         // 可以使用的狀態
-    "repairing",     // 維修中的狀態
-    "malfunction",   // 故障的狀態
-    "rented",        // 租借中的狀態
+    "ready" = "ready",         // 可以使用的狀態
+    "repairing" = "repairing",     // 維修中的狀態
+    "malfunction" = "malfunction",   // 故障的狀態
+    "rented" = "rented",        // 租借中的狀態
 }
 
 // 物理物件的基礎類別
@@ -29,7 +29,7 @@ export class Scooter extends PhysicalObject {
 
 // 使用者類別，繼承自物理物件類別
 export class User extends PhysicalObject {
-    constructor(user_id: number, location: Location, public username: string, public credit_card: string|null, public coupons: number, public telephone_number: string|null, public email: string) {
+    constructor(user_id: number, location: Location, public username: string, public credit_card: string | null, public coupons: number, public telephone_number: string | null, public email: string) {
         super(user_id, location);
     }
 }
@@ -60,7 +60,9 @@ export class Order extends DigitalObject {
         public active: boolean,
         public rent_time: string,
         public return_time: string,
-        public total_time: null | number
+        public total_time: null | number,
+        public charge_times: number,
+        public use_coupon: boolean
     ) {
         super(order_id);
     }

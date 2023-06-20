@@ -7,14 +7,16 @@ import {
 
 import scooter_icon from "./img/vespa-motorcycle-svgrepo-com.svg"
 import renting_icon from "./img/vespa-motorcycle-svgrepo-com-renting.svg";
+import broken_icon from "./img/broken_scooter.svg"
 import power_icon from "./img/electric-station-svgrepo-com.svg";
 import user_icon from "./img/walk-svgrepo-com.svg";
+import admin_icon from "./img/engineer-worker-svgrepo-com.svg"
 
 import { atom_data } from "../lib/store";
 import MapControl from "./MapControl";
 import "./map.css";
-import { change_user_location, get_battery_level, get_scooters, get_stations, recharge_scooter, rent_scooter, return_scooter, update_order } from "../lib/utils";
-import { Scooter, Location, Station } from '../lib/model';
+import { change_user_location, get_battery_level, get_scooters, get_stations, recharge_scooter, rent_scooter, repair_scooter, return_scooter, update_order } from "../lib/utils";
+import { Scooter, Location, Station, scooterStatus } from '../lib/model';
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
 
@@ -24,11 +26,11 @@ import { toast } from 'react-toastify';
 type LatLngLiteral = google.maps.LatLngLiteral;
 type MapOptions = google.maps.MapOptions;
 
-interface mapProps{
-    dev:boolean;
+interface mapProps {
+    dev: boolean;
 }
 
-export default function Map({dev}:mapProps) {
+export default function Map({ dev }: mapProps) {
     const [data, set_data] = useAtom(atom_data);
     const map_api_key = import.meta.env.VITE_GOOGLE_MAP_API === undefined ? "" : import.meta.env.VITE_GOOGLE_MAP_API
     const { isLoaded } = useJsApiLoader({
@@ -43,8 +45,8 @@ export default function Map({dev}:mapProps) {
 
     useEffect(() => { // 取得資料庫資料
         const updateScootersAndStations = async () => {
-            set_scooters(await get_scooters(dev?300:100));
-            set_stations(await get_stations(dev?1000:500));
+            set_scooters(await get_scooters(dev ? 300 : 100));
+            set_stations(await get_stations(dev ? 1000 : 500));
             await update_order()
         };
         const getOrderData = async () => {
@@ -85,7 +87,7 @@ export default function Map({dev}:mapProps) {
                         mapContainerClassName="map-container"
                         options={options}
                         onLoad={onLoad}>
-                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={data.current_order === null ? user_icon : renting_icon} onMouseDown={() => set_show_return_window(true)} />
+                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={data.is_admin ? admin_icon : (data.current_order === null ? user_icon : renting_icon)} onMouseDown={() => set_show_return_window(true)} />
                         {data.current_order != null ? show_return_window &&
                             <InfoWindow
                                 position={{ lat: data.current_location.lat, lng: data.current_location.lng }}
@@ -93,11 +95,12 @@ export default function Map({dev}:mapProps) {
                             >
                                 <div>
                                     <h3>Return Scooter</h3>
+                                    <p>Distance:{data.current_order.total_distance.toFixed(2)}km</p>
                                     {data.current_user.coupons > 0 ? (<p>
                                         <input type="checkbox" checked={use_coupon} onClick={() => set_use_coupon(!use_coupon)}></input>
-                                        Use coupon
+                                        Use coupon({data.current_user.coupons})
                                     </p>) : (<p>No coupon available</p>)}
-                                    <button onClick={async () => {toast(`price:${await return_scooter(use_coupon)}`); set_show_return_window(false) }}>
+                                    <button onClick={async () => { toast(`price:${await return_scooter(use_coupon)}ntd`); set_show_return_window(false) }}>
                                         Return
                                     </button>
                                 </div>
@@ -105,10 +108,10 @@ export default function Map({dev}:mapProps) {
                             </InfoWindow> : <></>}
                         <MapControl position="BOTTOM_LEFT">
                             <button
-                                style={{ "margin": 10, opacity:"0.7" }}
+                                style={{ "margin": 10, opacity: "0.7" }}
                                 className="contrast"
                             >
-                                Battery Level:{current_battery_level<0?"--":current_battery_level}%
+                                Battery Level:{current_battery_level < 0 ? "--" : current_battery_level}%
                             </button>
                         </MapControl>
                         <MapControl position="TOP_LEFT">
@@ -184,7 +187,7 @@ export default function Map({dev}:mapProps) {
                                 <Marker
                                     key={scooter.id}
                                     position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
-                                    icon={scooter_icon}
+                                    icon={data.is_admin && scooter.status === scooterStatus.malfunction ? broken_icon : scooter_icon}
                                     onMouseDown={() => setSelectedScooter(scooter)}
                                 />
 
@@ -198,7 +201,7 @@ export default function Map({dev}:mapProps) {
                             >
                                 <div>
                                     <h3>Recharge Station</h3>
-                                    <button onClick={async () => { await recharge_scooter(selectedStation.id); await set_battery_level(await get_battery_level()); }}
+                                    <button onClick={async () => { await recharge_scooter(selectedStation.id); toast("Recharge completed, you get a coupon."); await set_battery_level(await get_battery_level()); }}
                                     >
                                         Recharge
                                     </button>
@@ -214,12 +217,29 @@ export default function Map({dev}:mapProps) {
                                     <h3>{selectedScooter.plate}</h3>
                                     <p>Battery Level: {selectedScooter.battery_level}%</p>
                                     <p>Status: {selectedScooter.status}</p> {/* Update the status based on the isRenting value */}
-                                    <button
-                                        onClick={() => {rent_scooter(selectedScooter.id);setSelectedScooter(null)}}
-                                        className="rent-button"
-                                    >
-                                        Rent
-                                    </button>
+                                    {data.is_admin ?
+
+                                        (selectedScooter.status === scooterStatus.malfunction ? <>
+                                            <button
+                                                onClick={async () => { await repair_scooter(selectedScooter.id); set_scooters(await get_scooters(dev ? 300 : 100));; setSelectedScooter(null) }}
+                                                className="rent-button"
+                                            >
+                                                Repair
+                                            </button>
+
+                                        </> : <></>)
+
+
+                                        : <>
+                                            <button
+                                                onClick={async () => { await rent_scooter(selectedScooter.id); toast("successfully rent a scotter!"); setSelectedScooter(null) }}
+                                                className="rent-button"
+                                            >
+                                                Rent
+                                            </button>
+
+                                        </>}
+
                                 </div>
                             </InfoWindow>
                         )) : <></>}

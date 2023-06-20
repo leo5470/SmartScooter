@@ -12,7 +12,7 @@ export default function Home() {
     const [data , ] = useAtom(atom_data);
     return (
         <>
-            {data.current_user.id != -1? data.current_user.is_admin === true?<Navigate to="/admin"/>: <Navigate to="/user"/>:""}
+            {data.current_user.id != -1? data.is_admin === true?<Navigate to="/admin"/>: <Navigate to="/user"/>:""}
             <AnonymousNav></AnonymousNav>
             <main className="container">
                 {outlet || <HomeContent></HomeContent>}
