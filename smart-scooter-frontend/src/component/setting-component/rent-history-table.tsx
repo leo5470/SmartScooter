@@ -1,12 +1,24 @@
+import { useEffect, useState } from "react"
 import { Order } from "../../lib/model"
 import LocationComponent from "./location-component"
 import "./setting-component-css/rent-histroy-table.scoped.css"
+import { useAtom } from "jotai"
+import { atom_data } from "../../lib/store"
+import { get_plate } from "../../lib/utils"
 
 interface Prop {
     order: Order
 }
 
 export default function RentHistoryTable({ order }: Prop) {
+    const [data , ] = useAtom(atom_data)
+    const [plate , set_plate] = useState("")
+    useEffect(()=>{
+        const loader = async()=>{
+            set_plate(await get_plate(order.scooter_id))
+        }
+        loader()
+    },[data.current_order])
     return (
         <article style={{ backgroundColor: "#4F709C" }}>
         <table className="rent-history-table">
@@ -15,7 +27,7 @@ export default function RentHistoryTable({ order }: Prop) {
                     <td rowSpan={3}>
                         <div className="car-plate">
                             <span className="vehicle-type">電動車</span>
-                            <span className="plate-number">{order.scooter_id}</span>
+                            <span className="plate-number">{plate}</span>
                         </div>
                     </td>
                     <td><h2>租車</h2></td>

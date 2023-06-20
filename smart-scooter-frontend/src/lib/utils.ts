@@ -12,6 +12,7 @@ interface Iresponse<T> {
     userData?: User | null;
     battery_level?: number | null | undefined;
     price?: number | null | undefined;
+    plate?: string | null | undefined;
 }
 
 // 檢查 API 是否可連接
@@ -197,3 +198,13 @@ export const get_battery_level = async () => {
         return 100;
     }
 };
+
+export const get_plate = async (scooter_id: number) => {
+    const plate_data = await fetch_data<null>("/get-plate", "GET", {}, { "scooter_id": scooter_id });
+    if (plate_data.success === true && plate_data.plate != undefined && plate_data.plate != null) {
+        return plate_data.plate;
+    }
+    else {
+        return ""
+    }
+}
