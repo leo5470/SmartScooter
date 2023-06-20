@@ -42,5 +42,6 @@ export default function RentHistoryTable({ order }: Prop) {
                 </tr>
             </tbody>
         </table>
+
     )
 }
