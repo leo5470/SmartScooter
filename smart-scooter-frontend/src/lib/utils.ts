@@ -173,6 +173,16 @@ export const get_stations = async (range: number = 500) => {
     }
 };
 
+export const get_past_orders = async()=>{
+    const orders_data = await fetch_data<Array<Order>>("/user/past-order" , "GET" , {} , {"limit":999 , "offset":0})
+    if (orders_data.success === true  && orders_data.data!= undefined && orders_data.data!=null){
+        return orders_data.data;
+    }
+    else{
+        return []
+    }
+}
+
 export const recharge_scooter = async (station_id: number) => {
     await fetch_data<null>("/user/recharge", "POST", { "station_id": station_id }, {})
     return await update_order()
