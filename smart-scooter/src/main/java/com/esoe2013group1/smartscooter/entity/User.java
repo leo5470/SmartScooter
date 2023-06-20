@@ -26,7 +26,7 @@ public class User {
 
     private Double lng;
 
-    private Integer coupons = 0;
+    private Integer coupons;
 
     @JsonProperty("credit_card")
     private String creditCard;
@@ -128,6 +128,7 @@ public class User {
     public User(UserData userData){
         try{
             copyFromData(userData);
+            coupons = 0;
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
