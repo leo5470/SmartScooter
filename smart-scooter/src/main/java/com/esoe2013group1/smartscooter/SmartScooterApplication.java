@@ -169,7 +169,7 @@ public class SmartScooterApplication {
 					orderStatus.addLocation(userData.getLocation());
 					orderStatus.calcDistance();
 					Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
-					if(orderStatus.batteryDrop()){
+					if(orderStatus.batteryDrop() && scooter.getBattery_level() != 0){
 						scooter.dropBatteryLevel();
 					}
 					scooter.setLat(userData.getLocation().getLat());
@@ -177,6 +177,7 @@ public class SmartScooterApplication {
 
 					scooterRepository.saveAndFlush(scooter);
 					orderStatusRepository.saveAndFlush(orderStatus);
+
 				}
 
 			}
@@ -520,7 +521,11 @@ public class SmartScooterApplication {
 			}
 
 			Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
-			scooter.setStatus("ready");
+			if(scooter.getBattery_level() == 0){
+				scooter.setStatus("malfunction");
+			}else{
+				scooter.setStatus("ready");
+			}
 			scooterRepository.saveAndFlush(scooter);
 
 			orderStatus.setActive(false);
@@ -549,10 +554,6 @@ public class SmartScooterApplication {
 			}
 
 			Scooter scooter = scooterRepository.findById(scooterID.getId()).orElseThrow();
-			String status = scooter.getStatus();
-			if(!("malfunction".equals(status))){
-				throw new OperationException(status);
-			}
 			scooter.setStatus("ready");
 			scooter.setBattery_level(100);
 
@@ -614,23 +615,33 @@ public class SmartScooterApplication {
 		}
 	}
 
-//	@PreDestroy
-//	private void destroy(){
-//		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
-//		for(LoginStatus loginStatus : loginStatusList){
-//			loginStatus.setLogin(false);
-//			loginStatus.setTok(null);
-//			loginStatusRepository.saveAndFlush(loginStatus);
-//		}
-//		System.out.println("All loginStatus cleaned up.");
-//
-//		List<Scooter> scooterList = scooterRepository.findAll();
-//		for(Scooter scooter : scooterList){
-//			if(scooter.getStatus().equals("rented")){
-//				scooter.setStatus("malfunction");
-//				scooterRepository.saveAndFlush(scooter);
-//			}
-//		}
-//		System.out.println("All scooter cleaned up");
-//	}
+	@PreDestroy
+	private void destroy(){
+		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
+		for(LoginStatus loginStatus : loginStatusList){
+			loginStatus.setLogin(false);
+			loginStatus.setTok(null);
+			loginStatusRepository.saveAndFlush(loginStatus);
+		}
+		System.out.println("All loginStatus cleaned up.");
+
+		List<Scooter> scooterList = scooterRepository.findAll();
+		for(Scooter scooter : scooterList){
+			if(scooter.getStatus().equals("rented")){
+				scooter.setStatus("malfunction");
+				scooterRepository.saveAndFlush(scooter);
+			}
+		}
+		System.out.println("All scooter cleaned up");
+
+		List<OrderStatus> orderStatusList = orderStatusRepository.findAllByActive(true);
+		for (OrderStatus orderStatus : orderStatusList){
+			orderStatus.setActive(false);
+			LocalDateTime returnTime = LocalDateTime.now();
+			orderStatus.setReturnTime(returnTime);
+			orderStatus.calcTotalTime();
+			orderStatus.setPrice(0);
+		}
+		System.out.println("All order cleaned up");
+	}
 }
