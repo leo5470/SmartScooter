@@ -38,6 +38,12 @@ public class OrderData {
     @JsonProperty("total_time")
     private Integer totalTime;
 
+    @JsonProperty("charge_times")
+    private Integer chargeTimes;
+
+    @JsonProperty("use_coupon")
+    private boolean useCoupon;
+
     public Integer getId() {
         return id;
     }
@@ -118,6 +124,22 @@ public class OrderData {
         this.totalTime = totalTime;
     }
 
+    public Integer getChargeTimes() {
+        return chargeTimes;
+    }
+
+    public void setChargeTimes(Integer chargeTimes) {
+        this.chargeTimes = chargeTimes;
+    }
+
+    public boolean isUseCoupon() {
+        return useCoupon;
+    }
+
+    public void setUseCoupon(boolean useCoupon) {
+        this.useCoupon = useCoupon;
+    }
+
     public void copyFromData(OrderStatus orderStatus){
         id = orderStatus.getId();
         userID = orderStatus.getUserID();
@@ -128,6 +150,8 @@ public class OrderData {
         rentTime = orderStatus.getRentTime();
         returnTime = orderStatus.getReturnTime();
         totalTime = orderStatus.getTotalTime();
+        chargeTimes = orderStatus.getChargeTimes();
+        useCoupon = orderStatus.isUseCoupon();
 
         int historyLen = orderStatus.getLatHistory().size();
         for(int i = 0; i < historyLen; i++){
