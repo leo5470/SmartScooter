@@ -6,6 +6,7 @@ import CouponSettings from './setting-component/coupon-settings';
 import RentHistory from './setting-component/rent-history';
 import { atom_data } from '../lib/store';
 import { useAtom } from 'jotai';
+import AddAdmin from './setting-component/add-admin-settings';
 
 export default function Settings() {
   const [data,] = useAtom(atom_data)
@@ -52,6 +53,13 @@ export default function Settings() {
               </div>
 
             </> : <>
+              <div
+                className={`settings-menu-item ${activeTab === 'add-admin' ? 'active' : ''}`}
+                onClick={() => handleTabClick('add-admin')}
+              >
+                <strong>Add admin</strong>
+              </div>
+
             </>}
 
         </div>
@@ -71,9 +79,14 @@ export default function Settings() {
 
           </div>
 
-          <div className={`renhistory-settings ${activeTab === 'renthistory' ? 'show' : ''}`}>
+          <div className={`renthistory-settings ${activeTab === 'renthistory' ? 'show' : ''}`}>
             <RentHistory />
           </div>
+
+          <div className={`add-admin-settings ${activeTab === 'add-admin' ? 'show' : ''}`}>
+            <AddAdmin />
+          </div>
+
         </div>
       </div>
     </div>
