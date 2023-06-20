@@ -11,6 +11,8 @@ import jakarta.annotation.PreDestroy;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -588,6 +590,25 @@ public class SmartScooterApplication {
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			GeneralJSON generalJSON = new GeneralJSON(false, e.getMessage());
 			return generalJSON.makeJson(mapper);
+		}
+	}
+
+	@GetMapping("/api/admin/is-admin")
+	public ResponseEntity<?> isAdmin(@RequestHeader("token") String token){
+		try{
+			LoginStatus loginStatus = loginStatusRepository.findByTok(token);
+			if (loginStatus == null) {
+				throw new TokenDoesNotExistException();
+			}
+			int id = loginStatus.getId();
+			Credential credential = credentialRepository.findById(id).orElseThrow();
+			if(!credential.getAdmin()){
+				throw new PermissionDeniedException();
+			}
+			return new ResponseEntity<>(HttpStatus.OK);
+		}catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 		}
 	}
 
