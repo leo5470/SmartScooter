@@ -77,29 +77,36 @@ export const logout = async () => {
 };
 
 // 更改使用者位置
+
+export const change_user_info = async (username: string, email: string, telephone: string) => {
+    const new_user = new User(proxt_data.current_user.id, proxt_data.current_location, username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin, telephone, email);
+    proxt_data.current_user = new_user
+    return await sync_user()
+}
+
 export const change_user_location = async (location: Location) => {
     const new_location = new Location(location.lat, location.lng);
     const new_user = new User(proxt_data.current_user.id, new_location, proxt_data.current_user.username, proxt_data.current_user.credit_card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin, proxt_data.current_user.telephone_number, proxt_data.current_user.email)
     proxt_data.current_location = new_location
     proxt_data.current_user = new_user
-    return await sync_user();
+    return await sync_user()
 }
 export const sync_user = async () => {
     await fetch_data<null>("/update-userinfo ", "POST", { ...proxt_data.current_user })
     await update_user()
 }
 export const update_user = async () => {
-        if (proxt_data.current_session === "") {
-            proxt_data.current_user = { ...anonymous_user };
-            return;
-        }
-        const user_data = await fetch_data<User>("/get-userinfo", "GET", {});
-        if (user_data.success === true && user_data.userData != null) {
-            proxt_data.current_user = { ...user_data.userData };
-        } else {
-            proxt_data.current_user = { ...anonymous_user };
-        }
-    };
+    if (proxt_data.current_session === "") {
+        proxt_data.current_user = { ...anonymous_user };
+        return;
+    }
+    const user_data = await fetch_data<User>("/get-userinfo", "GET", {});
+    if (user_data.success === true && user_data.userData != null) {
+        proxt_data.current_user = { ...user_data.userData };
+    } else {
+        proxt_data.current_user = { ...anonymous_user };
+    }
+};
 
 // 註冊
 export const signup = async (username: string, email: string, password: string) => {
@@ -116,13 +123,13 @@ export const update_order = async () => {
             console.log(order_data.data)
             proxt_data.current_order = order_data.data
         }
-        else{
+        else {
             proxt_data.current_order = null
         }
-    }catch{
+    } catch {
         proxt_data.current_order = null
     }
-    
+
 }
 
 export const rent_scooter = async (scooter_id: number) => {
@@ -170,7 +177,7 @@ export const get_battery_level = async () => {
     const battery_data = await fetch_data<null>("/user/get-battery", "GET");
     if (battery_data.battery_level !== undefined && battery_data.battery_level !== null && battery_data.success === true) {
         return battery_data.battery_level;
-    } else  {
+    } else {
         return 100;
     }
 };

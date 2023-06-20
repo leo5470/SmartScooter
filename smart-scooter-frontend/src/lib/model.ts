@@ -29,7 +29,7 @@ export class Scooter extends PhysicalObject {
 
 // 使用者類別，繼承自物理物件類別
 export class User extends PhysicalObject {
-    constructor(user_id: number, location: Location, public username: string, public credit_card: string, public coupons: number, public is_admin: boolean, public telephone_number: string, public email: string) {
+    constructor(user_id: number, location: Location, public username: string, public credit_card: string, public coupons: number, public is_admin: boolean, public telephone_number: string|null, public email: string) {
         super(user_id, location);
     }
 }
