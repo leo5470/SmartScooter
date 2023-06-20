@@ -554,10 +554,6 @@ public class SmartScooterApplication {
 			}
 
 			Scooter scooter = scooterRepository.findById(scooterID.getId()).orElseThrow();
-			String status = scooter.getStatus();
-			if(!("malfunction".equals(status))){
-				throw new OperationException(status);
-			}
 			scooter.setStatus("ready");
 			scooter.setBattery_level(100);
 
