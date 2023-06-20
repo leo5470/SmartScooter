@@ -557,6 +557,8 @@ public class SmartScooterApplication {
 			scooter.setStatus("ready");
 			scooter.setBattery_level(100);
 
+			scooterRepository.saveAndFlush(scooter);
+
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
 			return generalJSON.makeJson(mapper);
 
