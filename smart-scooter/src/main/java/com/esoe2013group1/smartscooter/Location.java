@@ -96,7 +96,7 @@ public class Location {
         GlobalCoordinates destCoordinate = new GlobalCoordinates(destLat, destLng);
 
         GeodeticCurve geoCurve = geoCalc.calculateGeodeticCurve(ref, fromCoordinate, destCoordinate);
-        return geoCurve.getEllipsoidalDistance() / 1000;
+        return geoCurve.getEllipsoidalDistance() / 1000; // in kilometers
     }
 
     public static Location getCoordinate(Location base, Direction direction, double distance){
@@ -116,11 +116,11 @@ public class Location {
     }
 
     public static boolean checkInRange(Location base, Location comp){
-        return calcDistanceForTwoPoints(base, comp) <= 20;
+        return calcDistanceForTwoPoints(base, comp) <= 0.2;
     }
 
     public static boolean checkInRange(double baseLat, double baseLng, double compLat, double compLng){
-        return calcDistanceForTwoPoints(baseLat, baseLng , compLat, compLng) <= 20;
+        return calcDistanceForTwoPoints(baseLat, baseLng , compLat, compLng) <= 0.2;
     }
 
 }

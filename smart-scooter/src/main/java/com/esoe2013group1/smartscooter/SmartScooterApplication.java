@@ -226,6 +226,20 @@ public class SmartScooterApplication {
 		}
 	}
 
+	@GetMapping("/api/get-plate")
+	public String getPlate(@RequestParam int scooter_id){
+		try{
+			Scooter scooter = scooterRepository.findById(scooter_id).orElseThrow();
+			String plate = scooter.getPlate();
+			PlateJSON plateJSON = new PlateJSON(plate);
+			return plateJSON.makeJson(mapper);
+		} catch (Exception e){
+			System.out.println(e.getClass().getName() + ": " + e.getMessage());
+			PlateJSON plateJSON = new PlateJSON(false, e.getMessage());
+			return plateJSON.makeJson(mapper);
+		}
+	}
+
 	@GetMapping(value = {"/api/user/search/scooter", "/api/admin/search/scooter"})
 	public String userSearchScooter(@RequestHeader("token") String token, @RequestParam int range, HttpServletRequest request){
 		try {
@@ -386,7 +400,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// TODO: Test
 	@GetMapping("/api/user/past-order")
 	public String pastOrder(@RequestHeader("token") String token, @RequestParam int limit, @RequestParam int offset){
 		try {
@@ -409,20 +422,6 @@ public class SmartScooterApplication {
 			System.out.println(e.getClass().getName() + ": " + e.getMessage());
 			ListJSON<Object> listJSON = new ListJSON<>(e.getMessage());
 			return listJSON.makeJson(mapper);
-		}
-	}
-
-	@GetMapping("/api/get-plate")
-	public String getPlate(@RequestParam int scooter_id){
-		try{
-			Scooter scooter = scooterRepository.findById(scooter_id).orElseThrow();
-			String plate = scooter.getPlate();
-			PlateJSON plateJSON = new PlateJSON(plate);
-			return plateJSON.makeJson(mapper);
-		} catch (Exception e){
-			System.out.println(e.getClass().getName() + ": " + e.getMessage());
-			PlateJSON plateJSON = new PlateJSON(false, e.getMessage());
-			return plateJSON.makeJson(mapper);
 		}
 	}
 
@@ -619,7 +618,7 @@ public class SmartScooterApplication {
 
 	@PreDestroy
 	private void destroy(){
-		List<LoginStatus> loginStatusList = loginStatusRepository.findAll();
+		List<LoginStatus> loginStatusList = loginStatusRepository.findAllByLogin(true);
 		for(LoginStatus loginStatus : loginStatusList){
 			loginStatus.setLogin(false);
 			loginStatus.setTok(null);
@@ -627,12 +626,10 @@ public class SmartScooterApplication {
 		}
 		System.out.println("All loginStatus cleaned up.");
 
-		List<Scooter> scooterList = scooterRepository.findAll();
+		List<Scooter> scooterList = scooterRepository.findAllByStatus("rented");
 		for(Scooter scooter : scooterList){
-			if(scooter.getStatus().equals("rented")){
-				scooter.setStatus("malfunction");
-				scooterRepository.saveAndFlush(scooter);
-			}
+			scooter.setStatus("malfunction");
+			scooterRepository.saveAndFlush(scooter);
 		}
 		System.out.println("All scooter cleaned up");
 
