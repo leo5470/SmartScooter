@@ -17,12 +17,12 @@ export default function AccountSettings() {
             value: "daan", label: "Daan district"
         }
     ]
-    const [data , set_data] =  useAtom(atom_data)
+    const [data, set_data] = useAtom(atom_data)
     const [selectedCity, setSelectedCity] = useState(cityOptions[0]);
     const [selectedDistrict, setSelectedDistrict] = useState(districtOptions[0]);
-    const [username , set_username] = useState(data.current_user.username)
-    const [email , set_email] = useState(data.current_user.email)
-    const [phone , set_phone] = useState(data.current_user.telephone_number === null? "":data.current_user.telephone_number)
+    const [username, set_username] = useState(data.current_user.username)
+    const [email, set_email] = useState(data.current_user.email)
+    const [phone, set_phone] = useState(data.current_user.telephone_number === null ? "" : data.current_user.telephone_number)
     return (
         <main className="container">
             <article>
@@ -41,7 +41,7 @@ export default function AccountSettings() {
                                     value={username}
                                     placeholder="Name"
                                     required
-                                    onChange={(e)=>{
+                                    onChange={(e) => {
                                         set_username(e.target.value)
                                     }}
                                 />
@@ -53,7 +53,7 @@ export default function AccountSettings() {
                             value={email}
                             placeholder="Email address"
                             required
-                            onChange={(e)=>{
+                            onChange={(e) => {
                                 set_email(e.target.value)
                             }}
                         />
@@ -64,49 +64,55 @@ export default function AccountSettings() {
                                 value={phone}
                                 placeholder="Your number"
                                 required
-                                onChange={(e)=>{
+                                onChange={(e) => {
                                     set_phone(e.target.value)
                                 }}
                             />
                         </label>
                         <div></div>
-                        <div className="grid">
-                            <div>
-                                <label htmlFor="city">City</label>
-                                <Select
-                                    defaultValue={selectedCity}
-                                    onChange={setSelectedCity}
-                                    options={cityOptions}
-                                />
+                        {data.is_admin === false ? <>
+                            <div className="grid">
+                                <div>
+                                    <label htmlFor="city">City</label>
+                                    <Select
+                                        defaultValue={selectedCity}
+                                        onChange={setSelectedCity}
+                                        options={cityOptions}
+                                    />
 
+                                </div>
+                                <div>
+                                    <label htmlFor="district">District</label>
+                                    <Select
+                                        defaultValue={selectedDistrict}
+                                        onChange={setSelectedDistrict}
+                                        options={districtOptions}
+                                    />
+                                </div>
                             </div>
-                            <div>
-                                <label htmlFor="district">District</label>
-                                <Select
-                                    defaultValue={selectedDistrict}
-                                    onChange={setSelectedDistrict}
-                                    options={districtOptions}
+                            <label htmlFor="street">
+                                Street
+                                <input
+                                    type="text"
+                                    id="street"
+                                    name="street"
+                                    value={"羅斯福路四段1號"}
+                                    placeholder="your address"
+                                    required
                                 />
-                            </div>
-                        </div>
-                        <label htmlFor="street">
-                            Street
-                            <input
-                                type="text"
-                                id="street"
-                                name="street"
-                                value={"羅斯福路四段1號"}
-                                placeholder="your address"
-                                required
-                            />
-                        </label>
+                            </label>
+
+                        </> :
+                            <>
+                            </>}
+
 
                         <button
                             type="submit"
                             className="contrast"
                             onClick={(event) => {
                                 event.preventDefault()
-                                change_user_info(username , email , phone)
+                                change_user_info(username, email, phone)
                                 toast("Changes saved")
                             }}
                         >Save Change</button>

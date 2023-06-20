@@ -70,13 +70,13 @@ export const login = async (username: string, password: string) => {
 };
 
 export const check_admin = async () => {
-    try {
-        fetch_data<null>("/admin/is-admin", "GET")
-        return true
-    }
-    catch {
-        return false
-    }
+
+    const req = await fetch(config.api_url + "/admin/is-admin", {
+        method: "GET",
+        headers: { "token": proxt_data.current_session, "Content-Type": "application/json" },
+    });
+    return req.ok
+
 }
 
 // 登出
@@ -165,7 +165,8 @@ export const return_scooter = async (use_coupon: boolean = false) => {
     }
 }
 export const get_scooters = async (range: number = 100) => {
-    const scooters_data = await fetch_data<Array<Scooter>>("/user/search/scooter", "GET", {}, { "range": range });
+
+    const scooters_data = await fetch_data<Array<Scooter>>(proxt_data.is_admin === true ? "/admin/search/scooter" : "/user/search/scooter", "GET", {}, { "range": range });
     if (scooters_data.success === true && scooters_data.data != null && scooters_data.data != undefined) {
         console.log(scooters_data.data);
         return scooters_data.data;
@@ -218,4 +219,9 @@ export const get_plate = async (scooter_id: number) => {
     else {
         return ""
     }
+}
+
+export const repair_scooter =  async (scooter_id: number) => {
+    await fetch_data<null>("/admin/repair", "POST", { "scooter_id": scooter_id }, {})
+    return await update_order();
 }
