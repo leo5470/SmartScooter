@@ -10,6 +10,7 @@ import renting_icon from "./img/vespa-motorcycle-svgrepo-com-renting.svg";
 import broken_icon from "./img/broken_scooter.svg"
 import power_icon from "./img/electric-station-svgrepo-com.svg";
 import user_icon from "./img/walk-svgrepo-com.svg";
+import admin_icon from "./img/engineer-worker-svgrepo-com.svg"
 
 import { atom_data } from "../lib/store";
 import MapControl from "./MapControl";
@@ -86,7 +87,7 @@ export default function Map({ dev }: mapProps) {
                         mapContainerClassName="map-container"
                         options={options}
                         onLoad={onLoad}>
-                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={data.current_order === null ? user_icon : renting_icon} onMouseDown={() => set_show_return_window(true)} />
+                        <Marker position={{ lat: data.current_location.lat, lng: data.current_location.lng }} icon={data.is_admin ? admin_icon : (data.current_order === null ? user_icon : renting_icon)} onMouseDown={() => set_show_return_window(true)} />
                         {data.current_order != null ? show_return_window &&
                             <InfoWindow
                                 position={{ lat: data.current_location.lat, lng: data.current_location.lng }}
@@ -219,7 +220,7 @@ export default function Map({ dev }: mapProps) {
 
                                         (selectedScooter.status === scooterStatus.malfunction ? <>
                                             <button
-                                                onClick={ async() => {await repair_scooter(selectedScooter.id);set_scooters(await get_scooters(dev ? 300 : 100));; setSelectedScooter(null) }}
+                                                onClick={async () => { await repair_scooter(selectedScooter.id); set_scooters(await get_scooters(dev ? 300 : 100));; setSelectedScooter(null) }}
                                                 className="rent-button"
                                             >
                                                 Repair
