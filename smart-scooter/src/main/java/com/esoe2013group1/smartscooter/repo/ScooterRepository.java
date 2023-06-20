@@ -11,4 +11,6 @@ public interface ScooterRepository
         extends JpaRepository<Scooter, Integer> {
     List<Scooter> findAllByLatBetweenAndLngBetween(double minLat, double maxLat, double minLng, double maxLng);
     List<Scooter> findAllByLatBetweenAndLngBetweenAndStatus(double minLat, double maxLat, double minLng, double maxLng, String status);
+
+    List<Scooter> findAllByStatus(String status);
 }
