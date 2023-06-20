@@ -97,7 +97,7 @@ export default function Map({dev}:mapProps) {
                                         <input type="checkbox" checked={use_coupon} onClick={() => set_use_coupon(!use_coupon)}></input>
                                         Use coupon
                                     </p>) : (<p>No coupon available</p>)}
-                                    <button onClick={async () => {toast(`price:${await return_scooter()}`); set_show_return_window(false) }}>
+                                    <button onClick={async () => {toast(`price:${await return_scooter(use_coupon)}`); set_show_return_window(false) }}>
                                         Return
                                     </button>
                                 </div>

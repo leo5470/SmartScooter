@@ -1,7 +1,13 @@
 // @ts-nocheck
+import { useState } from "react"
 import "./setting-component-css/add-new-card.scoped.css"
+import { change_user_payment } from "../../lib/utils"
 
 export default function AddNewCard() {
+    const [number_1, set_number_1] = useState("")
+    const [number_2, set_number_2] = useState("")
+    const [number_3, set_number_3] = useState("")
+    const [number_4, set_number_4] = useState("")
     return (
         <div>
             <section>
@@ -99,24 +105,32 @@ export default function AddNewCard() {
                                 id="card-number"
                                 className="input-cart-number"
                                 maxLength={4}
+                                value={number_1}
+                                onChange={(e) => set_number_1(e.target.value)}
                             />
                             <input
                                 type="num"
                                 id="card-number-1"
                                 className="input-cart-number"
                                 maxLength={4}
+                                value={number_2}
+                                onChange={(e) => set_number_2(e.target.value)}
                             />
                             <input
                                 type="num"
                                 id="card-number-2"
                                 className="input-cart-number"
                                 maxLength={4}
+                                value={number_3}
+                                onChange={(e) => set_number_3(e.target.value)}
                             />
                             <input
                                 type="num"
                                 id="card-number-3"
                                 className="input-cart-number"
                                 maxLength={4}
+                                value={number_4}
+                                onChange={(e) => set_number_4(e.target.value)}
                             />
                         </fieldset>
                         <fieldset>
@@ -154,10 +168,14 @@ export default function AddNewCard() {
                         </fieldset>
                         <fieldset className="fieldset-ccv">
                             <label htmlFor="card-ccv">CCV</label>
-                            <input type="text" id="card-ccv" maxLength={3} placeholder="***" />
+                            <input type="text" id="card-ccv" maxLength={3} placeholder="***" required />
                         </fieldset>
-                        <button className="btn">
-                            <i className="fa fa-lock" /> Add New Card
+                        <button className="btn" onClick={(e) => {
+                            e.preventDefault();
+                            const new_card = number_1 + number_2 + number_3 + number_4
+                            change_user_payment(new_card)
+                        }}>
+                            <i className="fa fa-lock" /> Update payment method
                         </button>
                     </form>
                 </div>

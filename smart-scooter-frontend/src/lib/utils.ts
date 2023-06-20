@@ -91,6 +91,11 @@ export const change_user_location = async (location: Location) => {
     proxt_data.current_user = new_user
     return await sync_user()
 }
+export const change_user_payment = async(card:string)=>{
+    const new_user = new User(proxt_data.current_user.id, proxt_data.current_user.location, proxt_data.current_user.username, card, proxt_data.current_user.coupons, proxt_data.current_user.is_admin, proxt_data.current_user.telephone_number, proxt_data.current_user.email)
+    proxt_data.current_user = new_user
+    return await sync_user()
+}
 export const sync_user = async () => {
     await fetch_data<null>("/update-userinfo ", "POST", { ...proxt_data.current_user })
     await update_user()
