@@ -1,0 +1,24 @@
+
+  .coupon-wrapper {
+    background-color: #F7FFE5;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  .coupon-header {
+    text-align: center;
+  }
+  
+  .coupon-title {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .coupon-discount {
+    display: block;
+    margin-top: 10px;
+    font-size: 18px;
+    color: #888;
+  }
+  
