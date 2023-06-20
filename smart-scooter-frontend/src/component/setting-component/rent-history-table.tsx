@@ -53,7 +53,7 @@ export default function RentHistoryTable({ order }: Prop) {
                 <tr>
                     <td colSpan={2}>
                         <li><h2>總里程 {order.total_distance.toFixed(2)}km</h2></li>
-                        <li><h2>租借時長 {order.total_time}min</h2></li>
+                        <li><h2>租借時長 {order.total_time}sec</h2></li>
                     </td>
                 </tr>
             </tbody>

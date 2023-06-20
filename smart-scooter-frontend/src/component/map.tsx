@@ -95,11 +95,12 @@ export default function Map({ dev }: mapProps) {
                             >
                                 <div>
                                     <h3>Return Scooter</h3>
+                                    <p>Distance:{data.current_order.total_distance.toFixed(2)}km</p>
                                     {data.current_user.coupons > 0 ? (<p>
                                         <input type="checkbox" checked={use_coupon} onClick={() => set_use_coupon(!use_coupon)}></input>
-                                        Use coupon
+                                        Use coupon({data.current_user.coupons})
                                     </p>) : (<p>No coupon available</p>)}
-                                    <button onClick={async () => { toast(`price:${await return_scooter(use_coupon)}`); set_show_return_window(false) }}>
+                                    <button onClick={async () => { toast(`price:${await return_scooter(use_coupon)}ntd`); set_show_return_window(false) }}>
                                         Return
                                     </button>
                                 </div>
@@ -200,7 +201,7 @@ export default function Map({ dev }: mapProps) {
                             >
                                 <div>
                                     <h3>Recharge Station</h3>
-                                    <button onClick={async () => { await recharge_scooter(selectedStation.id); await set_battery_level(await get_battery_level()); }}
+                                    <button onClick={async () => { await recharge_scooter(selectedStation.id); toast("Recharge completed, you get a coupon."); await set_battery_level(await get_battery_level()); }}
                                     >
                                         Recharge
                                     </button>
@@ -231,7 +232,7 @@ export default function Map({ dev }: mapProps) {
 
                                         : <>
                                             <button
-                                                onClick={() => { rent_scooter(selectedScooter.id); setSelectedScooter(null) }}
+                                                onClick={async () => { await rent_scooter(selectedScooter.id); toast("successfully rent a scotter!"); setSelectedScooter(null) }}
                                                 className="rent-button"
                                             >
                                                 Rent

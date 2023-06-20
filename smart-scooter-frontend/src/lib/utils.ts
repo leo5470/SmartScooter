@@ -221,7 +221,12 @@ export const get_plate = async (scooter_id: number) => {
     }
 }
 
-export const repair_scooter =  async (scooter_id: number) => {
+export const repair_scooter = async (scooter_id: number) => {
     await fetch_data<null>("/admin/repair", "POST", { "scooter_id": scooter_id }, {})
     return await update_order();
+}
+
+export const add_admin = async (username: string) => {
+    await fetch_data<null>('/admin/set-admin', "POST", { "username": username }, {})
+    return;
 }
