@@ -8,6 +8,7 @@ interface Prop {
 
 export default function RentHistoryTable({ order }: Prop) {
     return (
+        <article style={{ backgroundColor: "#4F709C" }}>
         <table className="rent-history-table">
             <tbody>
                 <tr>
@@ -42,6 +43,6 @@ export default function RentHistoryTable({ order }: Prop) {
                 </tr>
             </tbody>
         </table>
-
+</article>
     )
 }
