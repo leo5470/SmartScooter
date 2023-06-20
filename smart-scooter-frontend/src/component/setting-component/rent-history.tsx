@@ -23,7 +23,7 @@ export default function RentHistory() {
                 <select>
                     <option value="time" placeholder="Sort by">Sort by Date</option>
                 </select>
-                <article style={{ backgroundColor: "#8F9491" }}>
+                <article style={{ backgroundColor: "#F7FFE5" }}>
                     {past_orders.map((element, _) => {
                         return(<RentHistoryTable order={element} />)
                     })}
