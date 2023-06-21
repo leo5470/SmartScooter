@@ -218,7 +218,18 @@ export default function Map({ dev }: mapProps) {
                             >
                                 <div>
                                     <h3>Recharge Station</h3>
-                                    <button onClick={async () => { await recharge_scooter(selectedStation.id); toast("Recharge completed, you get a coupon."); await set_battery_level(await get_battery_level()); }}
+                                    <button onClick={async () => {
+                                        try {
+                                            await recharge_scooter(selectedStation.id);
+                                            toast("Recharge completed, you get a coupon.");
+                                            await set_battery_level(await get_battery_level());
+
+                                        } catch (e) {
+                                            toast(e as string)
+                                        }
+
+
+                                    }}
                                     >
                                         Recharge
                                     </button>
