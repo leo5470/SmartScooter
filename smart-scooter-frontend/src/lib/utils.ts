@@ -157,6 +157,7 @@ export const rent_scooter = async (scooter_id: number) => {
 export const return_scooter = async (use_coupon: boolean = false) => {
     const return_data = await fetch_data<null>("/user/return", "POST", { "use_coupon": use_coupon });
     await update_order();
+    await update_user();
     if (return_data.success === true && return_data.price !== undefined && return_data.price != null) {
         return return_data.price;
     }
