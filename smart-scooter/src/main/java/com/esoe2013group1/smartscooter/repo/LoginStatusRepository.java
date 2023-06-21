@@ -11,5 +11,5 @@ public interface LoginStatusRepository
         extends JpaRepository<LoginStatus, Integer> {
     LoginStatus findByTok(String token);
 
-    List<LoginStatus> findAllByLogin(boolean login);
+    List<LoginStatus> findAllByTokIsNotNull();
 }

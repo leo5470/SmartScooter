@@ -618,7 +618,7 @@ public class SmartScooterApplication {
 
 	@PreDestroy
 	private void destroy(){
-		List<LoginStatus> loginStatusList = loginStatusRepository.findAllByLogin(true);
+		List<LoginStatus> loginStatusList = loginStatusRepository.findAllByTokIsNotNull();
 		for(LoginStatus loginStatus : loginStatusList){
 			loginStatus.setLogin(false);
 			loginStatus.setTok(null);
