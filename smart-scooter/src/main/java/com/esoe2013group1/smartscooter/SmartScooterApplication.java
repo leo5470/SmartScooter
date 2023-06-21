@@ -558,6 +558,10 @@ public class SmartScooterApplication {
 			scooter.setStatus("ready");
 			scooter.setBattery_level(100);
 
+			Location random = new Location(true);
+			scooter.setLat(random.getLat());
+			scooter.setLng(random.getLng());
+
 			scooterRepository.saveAndFlush(scooter);
 
 			GeneralJSON generalJSON = new GeneralJSON(true, "");
