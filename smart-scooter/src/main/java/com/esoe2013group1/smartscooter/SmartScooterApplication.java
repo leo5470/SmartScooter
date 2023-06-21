@@ -65,7 +65,6 @@ public class SmartScooterApplication {
 		return credentialRepository.findAll();
 	}
 
-	// Signup function test: Postman 200 OK
 	@PostMapping("/api/signup")
 	public String signup(@RequestBody SignupData data){
 		try{
@@ -97,7 +96,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// Passed
 	@PostMapping("/api/login")
 	public String login(@RequestBody LoginData data){
 		Credential credit = credentialRepository.findByUsername(data.getUsername());
@@ -127,7 +125,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// Passed
 	@GetMapping("/api/logout")
 	public String logout(@RequestHeader("token") String token){
 		try{
@@ -148,7 +145,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// Passed
 	@PostMapping("/api/update-userinfo")
 	public String updateUserInfo(@RequestHeader("token") String token, @RequestBody UserData userData){
 		try{
@@ -203,7 +199,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// Passed
 	@GetMapping("/api/get-userinfo")
 	public String getUserInfo(@RequestHeader("token") String token){
 		try{
@@ -375,7 +370,6 @@ public class SmartScooterApplication {
 		}
 	}
 
-	// Passed
 	@GetMapping("/api/user/active-order")
 	public String activeOrder(@RequestHeader("token") String token){
 		try{
