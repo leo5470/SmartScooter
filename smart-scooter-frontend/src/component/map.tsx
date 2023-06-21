@@ -11,6 +11,7 @@ import broken_icon from "./img/broken_scooter.svg"
 import power_icon from "./img/electric-station-svgrepo-com.svg";
 import user_icon from "./img/walk-svgrepo-com.svg";
 import admin_icon from "./img/engineer-worker-svgrepo-com.svg"
+import low_power_icon from "./img/low_power_scooter.svg"
 
 import { atom_data } from "../lib/store";
 import MapControl from "./MapControl";
@@ -187,7 +188,7 @@ export default function Map({ dev }: mapProps) {
                                 <Marker
                                     key={scooter.id}
                                     position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
-                                    icon={data.is_admin && scooter.status === scooterStatus.malfunction ? broken_icon : scooter_icon}
+                                    icon={data.is_admin && scooter.status === scooterStatus.malfunction ? broken_icon : (data.is_admin && scooter.battery_level<20? low_power_icon :scooter_icon)}
                                     onMouseDown={() => setSelectedScooter(scooter)}
                                 />
 
@@ -227,7 +228,14 @@ export default function Map({ dev }: mapProps) {
                                                 Repair
                                             </button>
 
-                                        </> : <></>)
+                                        </> : selectedScooter.battery_level<=20?<>
+                                        <button
+                                                onClick={async () => { await repair_scooter(selectedScooter.id); set_scooters(await get_scooters(dev ? 300 : 100));; setSelectedScooter(null) }}
+                                                className="rent-button"
+                                            >
+                                                Recharge
+                                            </button>
+                                        </>:<></>)
 
 
                                         : <>
