@@ -116,20 +116,23 @@ export default function Map({ dev }: mapProps) {
                                 </div>
 
                             </InfoWindow> : <></>}
-                        <MapControl position="BOTTOM_LEFT">
-                            <div>
-                                <div style={{ "margin": 10, padding: 10, opacity: "0.9", borderRadius: "5px", backgroundColor: "white" }}>
-                                    <label >Search Distance:{search_range}
-                                        <input type="range" min="50" onChange={(e) => (set_search_range(Number.parseInt(e.target.value)))} max="400" value={search_range} />
-                                    </label>
-                                    <p>
-                                        Battery Level:{current_battery_level < 0 ? "--" : current_battery_level}%
-                                    </p>
+                        {data.is_admin ? <></> : <>
+                            <MapControl position="BOTTOM_LEFT">
+                                <div>
+                                    <div style={{ "margin": 10, padding: 10, opacity: "0.9", borderRadius: "5px", backgroundColor: "white" }}>
+                                        <label >Search Distance:{search_range}
+                                            <input type="range" min="50" onChange={(e) => (set_search_range(Number.parseInt(e.target.value)))} max="400" value={search_range} />
+                                        </label>
+                                        <p>
+                                            Battery Level:{current_battery_level < 0 ? "--" : current_battery_level}%
+                                        </p>
 
 
+                                    </div>
                                 </div>
-                            </div>
-                        </MapControl>
+                            </MapControl>
+                        </>}
+
                         <MapControl position="TOP_LEFT">
                             <button
                                 onClick={() => set_center({ lat: data.current_location.lat, lng: data.current_location.lng })}
