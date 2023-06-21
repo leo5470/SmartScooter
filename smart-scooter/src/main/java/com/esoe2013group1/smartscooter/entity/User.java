@@ -117,8 +117,8 @@ public class User {
         tel = userData.getTel();
     }
 
-    public void addCoupon(){
-        coupons += 1;
+    public void addCoupon(int x){
+        coupons += x;
     }
 
     public void useCoupon(){

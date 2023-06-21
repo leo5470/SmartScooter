@@ -471,7 +471,6 @@ public class SmartScooterApplication {
 			if(!Location.checkInRange(user.getLat(), user.getLng(), station.getLat(), station.getLng())){
 				throw new OutOfReachException(station);
 			}
-			user.addCoupon();
 			orderStatus.addChargeTimes();
 
 			int scooterId = orderStatus.getScooterID();
@@ -509,8 +508,9 @@ public class SmartScooterApplication {
 
 			int price = orderStatus.settle(returnData.isUseCoupon());
 
+			User user = userRepository.findById(userId).orElseThrow();
+
 			if(returnData.isUseCoupon()){
-				User user = userRepository.findById(userId).orElseThrow();
 				if(user.getCoupons() < 1){
 					throw new CouponNotAvailableException();
 				}
@@ -518,6 +518,8 @@ public class SmartScooterApplication {
 				orderStatus.setUseCoupon(true);
 				userRepository.saveAndFlush(user);
 			}
+
+			user.addCoupon(orderStatus.getChargeTimes());
 
 			Scooter scooter = scooterRepository.findById(orderStatus.getScooterID()).orElseThrow();
 			if(scooter.getBattery_level() == 0){
