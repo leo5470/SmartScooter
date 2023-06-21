@@ -34,10 +34,9 @@ interface mapProps {
 
 export default function Map({ dev }: mapProps) {
     const [data, set_data] = useAtom(atom_data);
-    const map_api_key = import.meta.env.VITE_GOOGLE_MAP_API === undefined ? "" : import.meta.env.VITE_GOOGLE_MAP_API
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: map_api_key
+        googleMapsApiKey: ""
     })
     const [scooters, set_scooters] = useState<Array<Scooter>>([]); // 存取機車
     const [stations, set_stations] = useState<Array<Station>>([]); // 存取充電站
