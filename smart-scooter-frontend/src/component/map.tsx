@@ -20,6 +20,7 @@ import { change_user_location, get_battery_level, get_scooters, get_stations, re
 import { Scooter, Location, Station, scooterStatus } from '../lib/model';
 import { useRef, useMemo, useCallback, useState, useEffect } from "react"
 import { useAtom } from "jotai";
+import { debounce } from "lodash-es"
 
 import { toast } from 'react-toastify';
 
@@ -42,11 +43,11 @@ export default function Map({ dev }: mapProps) {
     const [stations, set_stations] = useState<Array<Station>>([]); // 存取充電站
     const [current_battery_level, set_battery_level] = useState(100);
     const [use_coupon, set_use_coupon] = useState(false);
-
+    const [search_range, set_search_range] = useState(100);
 
     useEffect(() => { // 取得資料庫資料
         const updateScootersAndStations = async () => {
-            set_scooters(await get_scooters(dev ? 300 : 100));
+            set_scooters(await get_scooters(dev ? 300 : search_range));
             set_stations(await get_stations(dev ? 1000 : 500));
             await update_order()
         };
@@ -60,12 +61,21 @@ export default function Map({ dev }: mapProps) {
         }
         Promise.all([updateScootersAndStations(), getOrderData()]);
     }, [data.current_location]);
+    useEffect(() => {
+        const updateScootersAndStations = async () => {
+            set_scooters(await get_scooters(dev ? 300 : search_range));
+        }
+        if (search_range % 10 == 0) {
+            updateScootersAndStations();
+        }
 
+    }, [search_range])
     const mapRef = useRef<GoogleMap>();
     const [center, set_center] = useState<LatLngLiteral>({ lat: 25.01754, lng: 121.53970 })
     const [selectedScooter, setSelectedScooter] = useState<Scooter | null>(null); // 用於標記對話框 InfoWindow
     const [selectedStation, setSelectedStation] = useState<Station | null>(null); // 用於標記對話框 InfoWindow
     const [show_return_window, set_show_return_window] = useState(false)
+
     // 建立地圖選項
     const options = useMemo<MapOptions>(
         () => ({
@@ -108,12 +118,18 @@ export default function Map({ dev }: mapProps) {
 
                             </InfoWindow> : <></>}
                         <MapControl position="BOTTOM_LEFT">
-                            <button
-                                style={{ "margin": 10, opacity: "0.7" }}
-                                className="contrast"
-                            >
-                                Battery Level:{current_battery_level < 0 ? "--" : current_battery_level}%
-                            </button>
+                            <div>
+                                <div style={{ "margin": 10, padding: 10, opacity: "0.9", borderRadius: "5px", backgroundColor: "white" }}>
+                                    <label >Search Distance:{search_range}
+                                        <input type="range" min="50" onChange={(e) => (set_search_range(Number.parseInt(e.target.value)))} max="400" value={search_range} />
+                                    </label>
+                                    <p>
+                                        Battery Level:{current_battery_level < 0 ? "--" : current_battery_level}%
+                                    </p>
+
+
+                                </div>
+                            </div>
                         </MapControl>
                         <MapControl position="TOP_LEFT">
                             <button
@@ -188,7 +204,7 @@ export default function Map({ dev }: mapProps) {
                                 <Marker
                                     key={scooter.id}
                                     position={{ lat: scooter.location.lat, lng: scooter.location.lng }}
-                                    icon={data.is_admin && scooter.status === scooterStatus.malfunction ? broken_icon : (data.is_admin && scooter.battery_level<20? low_power_icon :scooter_icon)}
+                                    icon={data.is_admin && scooter.status === scooterStatus.malfunction ? broken_icon : (data.is_admin && scooter.battery_level < 20 ? low_power_icon : scooter_icon)}
                                     onMouseDown={() => setSelectedScooter(scooter)}
                                 />
 
@@ -228,14 +244,14 @@ export default function Map({ dev }: mapProps) {
                                                 Repair
                                             </button>
 
-                                        </> : selectedScooter.battery_level<=20?<>
-                                        <button
+                                        </> : selectedScooter.battery_level <= 20 ? <>
+                                            <button
                                                 onClick={async () => { await repair_scooter(selectedScooter.id); set_scooters(await get_scooters(dev ? 300 : 100));; setSelectedScooter(null) }}
                                                 className="rent-button"
                                             >
                                                 Recharge
                                             </button>
-                                        </>:<></>)
+                                        </> : <></>)
 
 
                                         : <>
