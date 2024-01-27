@@ -1,5 +1,6 @@
 # SmartScooter
-OOP Final Project -- Smart Scooter Renting Platform
+
+2023 Spring OOP Final Project -- Smart Scooter Renting Platform
 
 ## API Documentation
 Backend API Documentation can be found at <https://hackmd.io/@leo5470/SkrVUh0Dn>
